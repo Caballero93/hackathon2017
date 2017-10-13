@@ -1,4 +1,3 @@
-import zmq
 from control import Control
 
 def worker(msg):
