@@ -1,33 +1,47 @@
-from utils import *
-from typing import Optional
+"""This module facilitates communication with the framework component."""
 
-class Message:
-    def __init__(one, two, three):
-        self.one
-        self.two
-        self.three
+from typing import Optional
+from utils import *
+
+__author__ = "Novak Boskov"
+__copyright__ = "Typhoon HIL Inc."
+__license__ = "MIT"
 
 class Control:
+    """Abstraction that represents connection between framework and
+    solution.
+
+    """
     def __init__(self,
                  in_port: Optional[int]=None, in_addr: Optional[int]=None,
                  out_port: Optional[int]=None, out_addr: Optional[int]=None):
-        self.config = get_conf()
-        self.in_port = in_port or self.config['socket_in_port']
-        self.in_addr = in_addr or self.config['in_address']
-        self.out_port = out_port or self.config['socket_out_port']
-        self.out_addr = out_addr or self.config['out_address']
-        self.in_socket, self.in_context = bind_sub_socket(self.in_addr,
-                                                          self.in_port)
-        self.out_socket, self.out_context = bind_pub_socket(self.out_addr,
-                                                            self.out_port)
+        """Communication sockets can be given by address and port, if not
+        configuration file is used.
+
+        """
+        self.in_socket, self.in_context = bind_sub_socket(
+            in_addr or CFG.in_address,
+            in_port or CFG.socket_in_port)
+        self.out_socket, self.out_context = bind_pub_socket(
+            out_addr or CFG.out_address,
+            out_port or CFG.socket_out_port)
 
     def get_data(self) -> [dict]:
+        """Get data from the framework.
+
+        Generator containing data is being returned.
+
+        """
         while True:
             msg = self.in_socket.recv_pyobj()
-            if not 'end' in msg:
+            if not msg.one == 1:
                 yield msg
             else:
                 return
 
-    def push_results(self, obj: Message) -> None:
+    def push_results(self, obj: ResultsMessage) -> None:
+        """Send message that contains results calculated by the solution back
+        to the framework.
+
+        """
         self.out_socket.send_pyobj(obj)

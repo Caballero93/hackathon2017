@@ -1,20 +1,55 @@
-import time
+#!/usr/bin/env python
+"""This module represents Typhoon HIL framework that is used for
+testing and rating of solutions.
+
+"""
+
+from multiprocessing import Process
+from time import time, sleep
 import random
+import fcntl
 from utils import *
 from typing import *
+import zmq
+
+__author__ = "Novak Boskov"
+__copyright__ = "Typhoon HIL Inc."
+__license__ = "MIT"
+
+def get_physics_metrics(results: ResultsMessage, spent_time: float) -> None:
+    # TODO: Make this file append suitable for concurrency
+    with open(CFG.results, 'a+') as f:
+        f.write('{}:{}'.format('result 1', spent_time))
+
+def rater(socket: zmq.Socket) -> None:
+    start = time()
+    solution_response = socket.recv_pyobj()
+    spent = time() - start
+
+    get_physics_metrics(solution_response, spent)
 
 if __name__ == '__main__':
-    config = get_conf()
-    socket, _ = bind_pub_socket(config['in_address'], config['socket_in_port'])
+    data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.socket_in_port)
+    result_gather_socket, _ = bind_sub_socket(CFG.out_address,
+                                              CFG.socket_out_port)
 
-    # TODO: Handle results sent by solution
+    processes = []
     while True:
         print('Socket publishing a message at {}:{} ...'
-              .format(config['in_address'], config['socket_in_port']))
+              .format(CFG.in_address, CFG.socket_in_port))
 
         if random.random() >= 0.95:
-            socket.send_pyobj({'end': 1})
+            data_emit_socket.send_pyobj(DataMessage(1, 0, 0))
         else:
-            socket.send_pyobj({'msg': 'hello!'})
+            data_emit_socket.send_pyobj(DataMessage(0, 0, 0))
 
-        time.sleep(1)
+        # Spawn process which performs calculations on framework's side
+        p = Process(target=rater, args=(result_gather_socket, ))
+        p.start()
+        processes.append(p)
+
+        sleep(1)
+
+    # Join processes one by one
+    for p in processes:
+        p.join()
