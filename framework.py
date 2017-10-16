@@ -7,7 +7,6 @@ testing and rating of solutions.
 from multiprocessing import Process
 from time import time, sleep
 import random
-import fcntl
 from utils import *
 from typing import *
 import zmq
@@ -29,14 +28,14 @@ def rater(socket: zmq.Socket) -> None:
     get_physics_metrics(solution_response, spent)
 
 if __name__ == '__main__':
-    data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.socket_in_port)
+    data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
     result_gather_socket, _ = bind_sub_socket(CFG.out_address,
-                                              CFG.socket_out_port)
+                                              CFG.out_port)
 
     processes = []
     while True:
         print('Socket publishing a message at {}:{} ...'
-              .format(CFG.in_address, CFG.socket_in_port))
+              .format(CFG.in_address, CFG.in_port))
 
         if random.random() >= 0.95:
             data_emit_socket.send_pyobj(DataMessage(1, 0, 0))
@@ -46,10 +45,9 @@ if __name__ == '__main__':
         # Spawn process which performs calculations on framework's side
         p = Process(target=rater, args=(result_gather_socket, ))
         p.start()
+        # TODO: These processes should be joined at some
+        # time. Otherwise they ramain dangle (zombie process) and
+        # overflow the CPU.
         processes.append(p)
 
         sleep(1)
-
-    # Join processes one by one
-    for p in processes:
-        p.join()

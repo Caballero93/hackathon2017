@@ -1,6 +1,6 @@
 """This module facilitates communication with the framework component."""
 
-from typing import Optional
+from typing import Optional, Generator
 from utils import *
 
 __author__ = "Novak Boskov"
@@ -14,19 +14,20 @@ class Control:
     """
     def __init__(self,
                  in_port: Optional[int]=None, in_addr: Optional[int]=None,
-                 out_port: Optional[int]=None, out_addr: Optional[int]=None):
+                 out_port: Optional[int]=None, out_addr: Optional[int]=None) \
+                 -> None:
         """Communication sockets can be given by address and port, if not
         configuration file is used.
 
         """
         self.in_socket, self.in_context = bind_sub_socket(
             in_addr or CFG.in_address,
-            in_port or CFG.socket_in_port)
+            in_port or CFG.in_port)
         self.out_socket, self.out_context = bind_pub_socket(
             out_addr or CFG.out_address,
-            out_port or CFG.socket_out_port)
+            out_port or CFG.out_port)
 
-    def get_data(self) -> [DataMessage]:
+    def get_data(self) -> Generator[DataMessage, None, None]:
         """Get data from the framework.
 
         Generator containing data is being returned.

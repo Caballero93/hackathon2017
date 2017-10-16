@@ -76,8 +76,8 @@ class Config():
         out_address - IP address for socket_out_port
         """
         config = self.get_conf()
-        self.socket_in_port = config.get('socket_in_port', None)
-        self.socket_out_port = config.get('socket_out_port', None)
+        self.in_port = config.get('in_port', None)
+        self.out_port = config.get('out_port', None)
         self.in_address = config.get('in_address', None)
         self.out_address = config.get('out_address', None)
         self.results = config.get('results', None)
