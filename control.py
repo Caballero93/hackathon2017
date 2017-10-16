@@ -26,7 +26,7 @@ class Control:
             out_addr or CFG.out_address,
             out_port or CFG.socket_out_port)
 
-    def get_data(self) -> [dict]:
+    def get_data(self) -> [DataMessage]:
         """Get data from the framework.
 
         Generator containing data is being returned.
