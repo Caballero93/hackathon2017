@@ -40,9 +40,9 @@ Or:
 ptyhon framework.py
 ```
 
-Framework immediately starts emitting data in the form of
-`DataMessage` (`DataMessage` alongside with other offered utilities is
-placed in the `utils` module).
+Framework starts emitting data in the form of `DataMessage`
+(`DataMessage` alongside with other offered utilities is placed in the
+`utils` module) after time lapse specified in `config.json`.
 
 ## Proposed solution
 Communication between Typhoon framework and the solution is abstracted

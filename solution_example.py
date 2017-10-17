@@ -20,4 +20,6 @@ if __name__ == '__main__':
     cntrl = Control()
 
     for data in cntrl.get_data():
+        print('DBG: received {}'.format(data.one))
+        from time import sleep; sleep(3)
         cntrl.push_results(worker(data))

@@ -4,9 +4,8 @@ testing and rating of solutions.
 
 """
 
-from multiprocessing import Process
+import os
 from time import time, sleep
-import random
 from utils import *
 from typing import *
 import zmq
@@ -16,9 +15,8 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 def get_physics_metrics(results: ResultsMessage, spent_time: float) -> None:
-    # TODO: Make this file append suitable for concurrency
     with open(CFG.results, 'a+') as f:
-        f.write('{}:{}'.format('result 1', spent_time))
+        f.write('{}:{}{}'.format(ResultsMessage, spent_time, os.linesep))
 
 def rater(socket: zmq.Socket) -> None:
     start = time()
@@ -29,25 +27,18 @@ def rater(socket: zmq.Socket) -> None:
 
 if __name__ == '__main__':
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
-    result_gather_socket, _ = bind_sub_socket(CFG.out_address,
-                                              CFG.out_port)
+    result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)
 
-    processes = []
-    while True:
+    lapse_time = CFG.framework_lapse_time or 1
+    print('Framework is booting with the lapse time of {}s ...'
+          .format(lapse_time))
+    sleep(lapse_time)
+
+    for i in range(CFG.samples_num):
         print('Socket publishing a message at {}:{} ...'
               .format(CFG.in_address, CFG.in_port))
 
-        if random.random() >= 0.95:
-            data_emit_socket.send_pyobj(DataMessage(1, 0, 0))
-        else:
-            data_emit_socket.send_pyobj(DataMessage(0, 0, 0))
-
-        # Spawn process which performs calculations on framework's side
-        p = Process(target=rater, args=(result_gather_socket, ))
-        p.start()
-        # TODO: These processes should be joined at some
-        # time. Otherwise they ramain dangle (zombie process) and
-        # overflow the CPU.
-        processes.append(p)
+        data_emit_socket.send_pyobj(DataMessage(i, 0, 0))
+        rater(result_gather_socket)
 
         sleep(1)

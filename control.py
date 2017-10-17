@@ -13,8 +13,8 @@ class Control:
 
     """
     def __init__(self,
-                 in_port: Optional[int]=None, in_addr: Optional[int]=None,
-                 out_port: Optional[int]=None, out_addr: Optional[int]=None) \
+                 in_port: Optional[int]=None, in_addr: Optional[str]=None,
+                 out_port: Optional[int]=None, out_addr: Optional[str]=None) \
                  -> None:
         """Communication sockets can be given by address and port, if not
         configuration file is used.
@@ -35,10 +35,7 @@ class Control:
         """
         while True:
             msg = self.in_socket.recv_pyobj()
-            if not msg.one == 1:
-                yield msg
-            else:
-                return
+            yield msg
 
     def push_results(self, obj: ResultsMessage) -> None:
         """Send message that contains results calculated by the solution back
