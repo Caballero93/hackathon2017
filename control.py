@@ -35,7 +35,10 @@ class Control:
         """
         while True:
             msg = self.in_socket.recv_pyobj()
-            yield msg
+            if msg:
+                yield msg
+            else:
+                return
 
     def push_results(self, obj: ResultsMessage) -> None:
         """Send message that contains results calculated by the solution back

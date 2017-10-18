@@ -14,19 +14,30 @@ __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
-class ResultsMessage:
-    """Message that is sent back to the framework by the solution."""
-    def __init__(self, one, two, three):
+class DataMessage:
+    """Message that is sent by the framework to the solution."""
+    def __init__(self, id, one, two, three):
+        self.id = id
         self.one = one
         self.two = two
         self.three = three
 
-class DataMessage:
-    """Message that is sent by the framework to the solution."""
-    def __init__(self, one, two, three):
+    def __str__(self):
+        return "id={}, one={}, two={}, three={}" \
+            .format(self.id, self.one, self.two, self.three)
+
+class ResultsMessage:
+    """Message that is sent back to the framework by the solution."""
+    def __init__(self, data_msg: DataMessage, one: int, two: int, three: int) \
+        -> None:
+        self.data_msg = data_msg
         self.one = one
         self.two = two
         self.three = three
+
+    def __str__(self):
+        return "{}: one={}, two={}, three={}" \
+            .format(self.data_msg, self.one, self.two, self.three)
 
 def bind_sub_socket(address: str, port: int) -> \
     Optional[Tuple[zmq.Socket, zmq.Context]]:
@@ -67,6 +78,12 @@ def safe_int(s: str) -> Optional[int]:
     except:
         return None
 
+def safe_bool(s: str) -> Optional[bool]:
+    if s == 'True':
+        return True
+    else:
+        return None
+
 class Config():
     """Class that represents configuration file.
 
@@ -95,6 +112,9 @@ class Config():
         self.samples_num = safe_int(framework('samplesNum')) # type: Optional[int]
         self.framework_lapse_time = safe_int(
             framework('frameworkLapseTime')) # type: Optional[int]
+        self.max_results_wait = safe_int(
+            framework('maxResultsWait')) # type: Optional[int]
+        self.DBG = safe_bool(framework('DBG')) # type: Optional[int]
 
     @staticmethod
     def get_conf() -> ConfigParser:
