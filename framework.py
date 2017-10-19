@@ -15,10 +15,17 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 def get_physics_metrics(data: DataMessage, results: ResultsMessage,
-                        spent_time: float, match: bool) -> None:
+                        spent_time: float, match: bool) \
+                        -> Tuple[float, float]:
+    """TODO: This function should be implemented by the team that define
+    physics.
+
+    """
     with open(CFG.results, 'a+') as f:
         f.write('{}:{} [{}]{}'
                 .format(str(results), spent_time, match, os.linesep))
+
+    return 0, 0
 
 def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     -> None:

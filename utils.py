@@ -84,7 +84,7 @@ def safe_bool(s: str) -> Optional[bool]:
     else:
         return None
 
-class Config():
+class Config:
     """Class that represents configuration file.
 
     It is initialized only once when this module is imported. The aim

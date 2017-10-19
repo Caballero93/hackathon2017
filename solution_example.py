@@ -12,15 +12,16 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 def worker(msg: DataMessage) -> ResultsMessage:
-    print('Worker doing its job, message is {} ...' \
-          .format(msg))
+    """TODO: This function should be implemented by contestors."""
+    print('D: received {}'.format(data.id))
+    print('Worker doing its job, message is {} ...'.format(msg))
+    from time import sleep; sleep(1)
+    print('D: is going to send {}'.format(data.id))
+
     return ResultsMessage(msg, 0, 0, 0)
 
 if __name__ == '__main__':
     cntrl = Control()
 
     for data in cntrl.get_data():
-        print('D: received {}'.format(data.id))
-        from time import sleep; sleep(1)
-        print('D: sent {}'.format(data.id))
         cntrl.push_results(worker(data))
