@@ -21,6 +21,6 @@ if __name__ == '__main__':
 
     for data in cntrl.get_data():
         print('D: received {}'.format(data.id))
-        from time import sleep; sleep(16)
+        from time import sleep; sleep(1)
         print('D: sent {}'.format(data.id))
         cntrl.push_results(worker(data))

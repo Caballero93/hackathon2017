@@ -42,7 +42,7 @@ ptyhon framework.py
 
 Framework starts emitting data in the form of `DataMessage`
 (`DataMessage` alongside with other offered utilities is placed in the
-`utils` module) after time lapse specified in `config.json`.
+`utils` module) after time lapse specified in `params.conf`.
 
 ## Proposed solution
 Communication between Typhoon framework and the solution is abstracted
@@ -55,10 +55,10 @@ encapsulated into `ResultsMessage` object. Proposed solution that
 depicts usage of the `Control` class is given below:
 
 ``` python
-def worker(msg):
+def worker(msg: DataMessage) -> ResultsMessage:
     print('Worker doing its job, message is {} ...' \
           .format(msg))
-    return ResultsMessage(0, 0, 0)
+    return ResultsMessage(msg, 0, 0, 0)
 
 if __name__ == '__main__':
     cntrl = Control()
