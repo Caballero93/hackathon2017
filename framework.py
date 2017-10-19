@@ -24,10 +24,10 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     -> None:
     start = time.time()
     msgs = dict(poller.poll(CFG.max_results_wait * 1000))
+    spent = time.time() - start
 
     if socket in msgs and msgs[socket] == zmq.POLLIN:
         solution_response = socket.recv_pyobj()
-        spent = time.time() - start
 
         match = True
         if solution_response.data_msg.id != data_msg.id:
@@ -40,10 +40,9 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
                           solution_response, spent))
 
         get_physics_metrics(data, solution_response, spent, match)
-    else:
-        if CFG.DBG:
-            print('DBG: Results are not sent in predefined interval of {}s.'
-                  .format(CFG.max_results_wait))
+    elif CFG.DBG:
+        print('DBG: Results are not sent in predefined interval of {}s.'
+              .format(CFG.max_results_wait))
 
 if __name__ == '__main__':
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
@@ -57,10 +56,11 @@ if __name__ == '__main__':
     time.sleep(lapse_time)
 
     for i in range(CFG.samples_num):
-        print('Socket is publishing a message at {}:{} ...'
-              .format(CFG.in_address, CFG.in_port))
-
         data = DataMessage(i, 0, 0, 0)
+
+        if CFG.DBG:
+            print('Framework emits {}'.format(data))
+
         data_emit_socket.send_pyobj(data)
         rater(result_gather_socket, results_poll, data)
 
