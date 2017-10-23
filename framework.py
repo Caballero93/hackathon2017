@@ -60,6 +60,7 @@ if __name__ == '__main__':
     results_poll = zmq.Poller()
     results_poll.register(result_gather_socket, zmq.POLLIN)
 
+    # Run http server in separate process
     http = Process(target=http_server_run, args=())
     http.start()
 

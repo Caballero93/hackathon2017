@@ -57,6 +57,6 @@ def run() -> None:
 
     server_address = ('127.0.0.1', CFG.results_http_server_port)
     httpd = HTTPServer(server_address, ResultsRequestHandler)
-    print('Running simple HTTP server on localhost:{} ...'
+    print('Running simple HTTP server on http://localhost:{} ...'
           .format(CFG.results_http_server_port))
     httpd.serve_forever()

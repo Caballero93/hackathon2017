@@ -50,7 +50,7 @@ def bind_sub_socket(address: str, port: int) -> \
     try:
         socket.connect('tcp://{}:{}' .format(address, port))
         socket.setsockopt(zmq.SUBSCRIBE, b'')
-        print('Subscribe socket connected at {}:{}.'.format(socket, port))
+        print('Subscribe socket connected at {}:{}.'.format(address, port))
         return socket, context
     except Exception as e:
         print('Connection to socket at {}:{} has failed.'
