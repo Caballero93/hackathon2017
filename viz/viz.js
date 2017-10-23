@@ -1,33 +1,34 @@
 /**
-@author
-Novak Boskov
+   @author
+   Novak Boskov
 
-@copyright
-Typhoon HIL Inc.
+   @copyright
+   Typhoon HIL Inc.
 
-@license
-MIT
+   @license
+   MIT
 */
 
-var dataArray = [23, 13, 21, 14, 37, 15, 18, 34, 30];
+SERVER_ADDRESS = "http://localhost";
+SERVER_PORT = 8000;
 
-var svg = d3.select("body").append("svg")
-    .attr("height", "100%")
-    .attr("width", "100%");
+function getResultsJSON() {
+    $.ajax({
+        url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
+        type: 'GET',
+        success: function(data) { alert(data); },
+        error: function() {
+            console.log("Typhoon's framework server respond with error");
+        }
+    });
+}
 
-svg.selectAll("rect")
-    .data(dataArray)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("height", function(d, i) {return d * 10})
-    .attr("width","40")
-    .attr("x", function(d, i) {return (i * 60) + 25})
-    .attr("y", function(d, i) {return 400 - (d * 10)});
-
-svg.selectAll("text")
-    .data(dataArray)
-    .enter().append("text")
-    .text(function(d) {return d})
-    .attr("class", "text")
-    .attr("x", function(d, i) {return (i * 60) + 36})
-    .attr("y", function(d, i) {return 415 - (d * 10)});
+var results = c3.generate({
+    bindto: '#results',
+    data: {
+        columns: [
+            ['data1', 30, 200, 100, 400, 150, 250],
+            ['data2', 50, 20, 10, 40, 15, 25]
+        ]
+    }
+});

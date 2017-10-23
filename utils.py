@@ -109,12 +109,16 @@ class Config:
         self.in_address = sockets('inAddress') # type: Optional[str]
         self.out_address = sockets('outAddress') # type: Optional[str]
         self.results = results('resultsFile') # type: Optional[str]
+        self.results_http_server_port = safe_int(
+            results('resultsHTTPServerPort')) # type: Optional[int]
+        self.shutdown_http_server = safe_bool(
+            results('shutdownHTTPServer')) # type: Optional[bool]
         self.samples_num = safe_int(framework('samplesNum')) # type: Optional[int]
         self.framework_lapse_time = safe_int(
             framework('frameworkLapseTime')) # type: Optional[int]
         self.max_results_wait = safe_int(
             framework('maxResultsWait')) # type: Optional[int]
-        self.DBG = safe_bool(framework('DBG')) # type: Optional[int]
+        self.DBG = safe_bool(framework('DBG')) # type: Optional[bool]
 
     @staticmethod
     def get_conf() -> ConfigParser:

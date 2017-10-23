@@ -6,9 +6,11 @@ testing and rating of solutions.
 
 import os
 import time
-from utils import *
+from multiprocessing import Process
 from typing import *
 import zmq
+from utils import *
+from http_server import run as http_server_run
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -17,13 +19,14 @@ __license__ = "MIT"
 def get_physics_metrics(data: DataMessage, results: ResultsMessage,
                         spent_time: float, match: bool) \
                         -> Tuple[float, float]:
-    """TODO: This function should be implemented by the team that define
+    """TODO: this function should be implemented by the team that define
     physics.
 
     """
-    with open(CFG.results, 'a+') as f:
-        f.write('{}:{} [{}]{}'
-                .format(str(results), spent_time, match, os.linesep))
+    # TODO: Change this to write JSON
+    # with open(CFG.results, 'a+') as f:
+    #     f.write('{}:{} [{}]{}'
+    #             .format(str(results), spent_time, match, os.linesep))
 
     return 0, 0
 
@@ -43,12 +46,12 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
 
         if CFG.DBG:
             print('DBG: {} {} received after {}s.'
-                  .format('ADEQUATE' if match else 'INADEQUATE',
+                  .format('adequate' if match else 'inadequate',
                           solution_response, spent))
 
         get_physics_metrics(data, solution_response, spent, match)
     elif CFG.DBG:
-        print('DBG: Results are not sent in predefined interval of {}s.'
+        print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))
 
 if __name__ == '__main__':
@@ -56,6 +59,9 @@ if __name__ == '__main__':
     result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)
     results_poll = zmq.Poller()
     results_poll.register(result_gather_socket, zmq.POLLIN)
+
+    http = Process(target=http_server_run, args=())
+    http.start()
 
     lapse_time = CFG.framework_lapse_time or 1
     print('Framework is booting with the lapse time of {}s ...'
@@ -73,3 +79,12 @@ if __name__ == '__main__':
 
     # Send terminating message to the solution
     data_emit_socket.send_pyobj(False)
+
+    if CFG.shutdown_http_server:
+        # Gracefully terminate HTTP server process that serves results
+        # to visualization web page
+        time.sleep(2)
+        http.terminate()
+        print('Simple HTTP server has stopped.')
+    else:
+        print('Simple HTTP server is still running...')
