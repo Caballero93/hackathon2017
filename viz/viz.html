@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="refresh" content="1">
         <title>Typhoon Python hackathon</title>
         <!-- Load c3.css -->
         <link href="bower_components/c3/c3.css" rel="stylesheet">
@@ -13,9 +12,13 @@
 
         <!-- Load JQuery -->
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="viz.js"></script>
     </head>
-    <div id="results"></div>
-    <script type="text/javascript" src="viz.js"></script>
-    <body>
+    <body onload="vizOnLoad()">
+        <div id="results"></div>
+
+        <button onclick="setPageRefresh(true)">Stop refreshing</button>
+        <input id="refreshRate" type="number" value="1" />
+        <button onclick="setPageRefresh(false, true)">Set refresh rate</button>
     </body>
 </html>
