@@ -16,9 +16,9 @@ function getResultsJSON() {
     $.ajax({
         url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
         type: 'GET',
-        success: function(data) { alert(data); },
-        error: function() {
-            console.log("Typhoon's framework server respond with error");
+        success: function(data) { vizResults(data); },
+        error: function(e) {
+            alert("Typhoon's framework server responded with an error." + e);
         }
     });
 }
@@ -36,20 +36,29 @@ function setPageRefresh(stopSet) {
     }
 }
 
-function vizResults() {
+/**
+ * Draw barchart that represents solution's results
+ * @param data - json that contains all results sent by the server
+ */
+function vizResults(data) {
+    var scale = 100;
     var results = c3.generate({
         bindto: '#results',
         data: {
             columns: [
-                ['data1', -30, 200, 200, 400, -150, 250],
-                ['data2', 130, 100, -100, 200, -150, 50],
-                ['data3', -230, 200, 200, -300, 250, 250],
-                ['data4', -210, 80, 100, -40, 43, 99]
+                ['energy efficiency'].concat(
+                    data.map(x => x.energyMark * scale)),
+                ['performance'].concat(
+                    data.map(x => x.timeSpent * scale))
             ],
             type: 'bar',
             groups: [
-                ['data1', 'data2', 'data3', 'data4']
-            ]
+                ['energy efficiency', 'performance']
+            ],
+            colors: {
+                'energy efficiency': '#c43131',
+                'performance': '#c4b8b8'
+            }
         },
         grid: {
             y: {
@@ -63,18 +72,18 @@ function vizResults() {
  * Runs on <body onload>
  */
 function vizOnLoad() {
+    getResultsJSON();
+
     $('#refreshRateForm').submit(function(event) {
         event.preventDefault();
         setPageRefresh("set");
     });
 
-    vizResults();
-
     // Refresh after number of seconds written in query parameter
     var qRefresh = window.location.search.split('=')[1] || 1;
     $('#refreshRate').val(qRefresh);
     if (qRefresh != Infinity) {
-        setTimeout(function() {window.location = window.location;},
+        setTimeout(function() { window.location = window.location; },
                    parseInt(qRefresh) * 1000);
     }
 }

@@ -23,11 +23,18 @@ def get_physics_metrics(data: DataMessage, results: ResultsMessage,
 
     """
 
-    return 0, 0
+    return 1, 1
 
 def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     -> None:
+    """Calculate time spent by the solution in current cycle and physics
+    mark for data_msg (if returned). Calculated data is being written
+    in results file.
+
+    """
     start = time.time()
+    # poller.poll blocks until message is sent or for passed
+    # milliseconds if message is not sent
     msgs = dict(poller.poll(CFG.max_results_wait * 1000))
     spent = time.time() - start
 

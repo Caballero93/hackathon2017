@@ -28,7 +28,7 @@ class ResultsRequestHandler(BaseHTTPRequestHandler):
 
         url = urlparse(self.path)
         if url.path == '/results':
-            self.send_header('Content-Type', 'application/java script')
+            self.send_header('Content-Type', 'application/json')
             self.end_headers()
 
             with open(CFG.results, 'r') as f:
