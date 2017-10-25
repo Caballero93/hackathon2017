@@ -29,16 +29,8 @@ function getResultsJSON() {
  * @param {Bool} set - set refresh rate using refresh rate input field
  */
 function setPageRefresh(stop=false, set=false) {
-    qRefresh = window.location.search.split('=')[1];
-    if (qRefresh === undefined) {
-        qRefresh = 1;
-    }
-
-    metaRefresh = $('head')
-        .append('<meta http-equiv="refresh" content="' + qRefresh + '">');
-
     if (stop) {
-        window.location.search = 'refreshRate=false';
+        window.location.search = 'refreshRate=Infinity';
     } else if (set) {
         window.location.search = 'refreshRate=' + $('#refreshRate').val();
     }
@@ -72,6 +64,13 @@ function vizResults() {
  */
 function vizOnLoad() {
     setPageRefresh();
-    $('#refreshRate').val(parseInt(window.location.search.split('=')[1]));
     vizResults();
+
+    // Refresh after number of seconds written in query parameter
+    var qRefresh = window.location.search.split('=')[1] || 1;
+    $('#refreshRate').val(qRefresh);
+    if (qRefresh != Infinity) {
+        setTimeout(function() {window.location = window.location;},
+                   parseInt(qRefresh) * 1000);
+    }
 }
