@@ -16,10 +16,10 @@ function getResultsJSON() {
     $.ajax({
         url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
         type: 'GET',
-        success: function(data) { vizResults(data); },
-        error: function(e) {
-            alert("Typhoon's framework server responded with an error." + e);
-        }
+        success: data => vizResults(data),
+        error: e =>
+            console.log("Typhoon's framework server responded with an error."
+                        + e)
     });
 }
 
@@ -74,7 +74,7 @@ function vizResults(data) {
 function vizOnLoad() {
     getResultsJSON();
 
-    $('#refreshRateForm').submit(function(event) {
+    $('#refreshRateForm').submit(event => {
         event.preventDefault();
         setPageRefresh("set");
     });
@@ -83,7 +83,7 @@ function vizOnLoad() {
     var qRefresh = window.location.search.split('=')[1] || 1;
     $('#refreshRate').val(qRefresh);
     if (qRefresh != Infinity) {
-        setTimeout(function() { window.location = window.location; },
+        setTimeout(() =>  window.location = window.location,
                    parseInt(qRefresh) * 1000);
     }
 }

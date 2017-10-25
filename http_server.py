@@ -47,8 +47,6 @@ class ResultsRequestHandler(BaseHTTPRequestHandler):
             except FileNotFoundError:
                 self.send_error(404, 'File not found.')
 
-        return
-
 def run() -> None:
     prepare_dot_dir()
 
