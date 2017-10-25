@@ -14,12 +14,15 @@
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <!-- Load visualization -->
         <script type="text/javascript" src="viz.js"></script>
+        <link href="viz.css" rel="stylesheet">
     </head>
     <body onload="vizOnLoad()">
         <div id="results"></div>
 
-        <button onclick="setPageRefresh(true)">Stop refreshing</button>
-        <input id="refreshRate" type="number" value="1" />
-        <button onclick="setPageRefresh(false, true)">Set refresh rate</button>
+        <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
+        <form id="refreshRateForm" class="inline">
+            <input id="refreshRate" type="number" />
+            <input type="submit" value="Set refresh rate" />
+        </form>
     </body>
 </html>

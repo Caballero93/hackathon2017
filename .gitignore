@@ -2,3 +2,4 @@ __pycache__/
 /results.csv
 viz/.tern-port
 .typhoon/
+/results.json

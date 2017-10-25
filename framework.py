@@ -4,7 +4,6 @@ testing and rating of solutions.
 
 """
 
-import os
 import time
 from multiprocessing import Process
 from typing import *
@@ -23,10 +22,6 @@ def get_physics_metrics(data: DataMessage, results: ResultsMessage,
     physics.
 
     """
-    # TODO: Change this to write JSON
-    # with open(CFG.results, 'a+') as f:
-    #     f.write('{}:{} [{}]{}'
-    #             .format(str(results), spent_time, match, os.linesep))
 
     return 0, 0
 
@@ -46,10 +41,11 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
 
         if CFG.DBG:
             print('DBG: {} {} received after {}s.'
-                  .format('adequate' if match else 'inadequate',
+                  .format('ADEQUATE' if match else 'INADEQUATE',
                           solution_response, spent))
 
-        get_physics_metrics(data, solution_response, spent, match)
+        write_a_result(
+            *get_physics_metrics(data, solution_response, spent, match))
     elif CFG.DBG:
         print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))
@@ -63,6 +59,10 @@ if __name__ == '__main__':
     # Run http server in separate process
     http = Process(target=http_server_run, args=())
     http.start()
+
+    # Create results file, truncate if exists
+    with open(CFG.results, 'w'):
+        pass
 
     lapse_time = CFG.framework_lapse_time or 1
     print('Framework is booting with the lapse time of {}s ...'

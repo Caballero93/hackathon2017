@@ -28,10 +28,10 @@ function getResultsJSON() {
  * @param {Bool} stop - stop refreshing
  * @param {Bool} set - set refresh rate using refresh rate input field
  */
-function setPageRefresh(stop=false, set=false) {
-    if (stop) {
+function setPageRefresh(stopSet) {
+    if (stopSet == "stop") {
         window.location.search = 'refreshRate=Infinity';
-    } else if (set) {
+    } else if (stopSet == "set") {
         window.location.search = 'refreshRate=' + $('#refreshRate').val();
     }
 }
@@ -63,7 +63,11 @@ function vizResults() {
  * Runs on <body onload>
  */
 function vizOnLoad() {
-    setPageRefresh();
+    $('#refreshRateForm').submit(function(event) {
+        event.preventDefault();
+        setPageRefresh("set");
+    });
+
     vizResults();
 
     // Refresh after number of seconds written in query parameter

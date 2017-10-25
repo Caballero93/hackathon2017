@@ -7,6 +7,7 @@ import sys
 import os
 from functools import partial
 from configparser import ConfigParser
+import json
 import zmq
 from typing import Dict, Tuple, Union, Optional
 
@@ -148,3 +149,15 @@ class Config:
 
 # Unique configuration object that should be used everywhere
 CFG = Config()
+
+def write_a_result(energy_mark: float, spent_time: float) -> None:
+    """Writes a single result record in results file"""
+    with open(CFG.results, 'r') as f:
+        if os.path.getsize(CFG.results) == 0:
+            current = []
+        else:
+            current = json.load(f)
+
+    with open(CFG.results, 'w') as f:
+        current.append({"energyMark": energy_mark, "timeSpent": spent_time})
+        json.dump(current, f)
