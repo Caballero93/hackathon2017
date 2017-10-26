@@ -11,15 +11,40 @@
 
 SERVER_ADDRESS = "http://localhost";
 SERVER_PORT = 8000;
+refreshRate = 1;
 
-function getResultsJSON() {
+/**
+ * GET solution's results from the server
+ */
+function getResults() {
     $.ajax({
         url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
         type: 'GET',
-        success: data => vizResults(data),
-        error: e =>
+        success: data => {
+            if (refreshRate != Infinity) {
+                // visualize results after refreshRate seconds
+                setTimeout(() => {
+
+                    vizResults(data);
+
+                    // Show refresh indicator once at 90% of
+                    // refreshRate time
+                    $('#refreshIndicator').html('Refreshing...');
+                    setTimeout(() => $('#refreshIndicator').html('')
+                               , 0.9 * refreshRate * 1000);
+
+                    // recur to next cycle
+                    getResults();
+                }, refreshRate * 1000);
+            }
+        },
+        error: e => {
             console.log("Typhoon's framework server responded with an error."
-                        + e)
+                        + e);
+            if (refreshRate != Infinity) {
+                setTimeout(() => getResults(), refreshRate);
+            }
+        }
     });
 }
 
@@ -30,9 +55,12 @@ function getResultsJSON() {
  */
 function setPageRefresh(stopSet) {
     if (stopSet == "stop") {
-        window.location.search = 'refreshRate=Infinity';
+        refreshRate = Infinity;
+        $('#refreshRate').val(refreshRate);
+        $('#refreshIndicator').html('');
     } else if (stopSet == "set") {
-        window.location.search = 'refreshRate=' + $('#refreshRate').val();
+        refreshRate = parseInt($('#refreshRate').val());
+        getResults();
     }
 }
 
@@ -72,18 +100,10 @@ function vizResults(data) {
  * Runs on <body onload>
  */
 function vizOnLoad() {
-    getResultsJSON();
-
     $('#refreshRateForm').submit(event => {
         event.preventDefault();
         setPageRefresh("set");
     });
 
-    // Refresh after number of seconds written in query parameter
-    var qRefresh = window.location.search.split('=')[1] || 1;
-    $('#refreshRate').val(qRefresh);
-    if (qRefresh != Infinity) {
-        setTimeout(() =>  window.location = window.location,
-                   parseInt(qRefresh) * 1000);
-    }
+    getResults();
 }
