@@ -22,6 +22,21 @@ cd <dir_where_this_repo_is_cloned>
 pip install -r requirements.txt
 ```
 
+Then run the proposed solution with:
+
+``` shell
+python3 solution_example.py
+```
+
+Now run the framework part to start getting data from it:
+
+``` shell
+python3 framework.py
+```
+
+Visualization is by default available at
+[http://localhost:8000/viz.html](http://localhost:8000/viz.html).
+
 **Before you start working on your solution consider the proposed
 solution architecture.**
 
