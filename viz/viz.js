@@ -38,11 +38,12 @@ function getResults() {
                 }, refreshRate * 1000);
             }
         },
-        error: e => {
-            console.log("Typhoon's framework server responded with an error."
-                        + e);
+        error: (_, __, error) => {
+            console.log("Typhoon's framework server responded with an error.\n"
+                        + error);
+
             if (refreshRate != Infinity) {
-                setTimeout(() => getResults(), refreshRate);
+                setTimeout(() => getResults(), refreshRate * 1000);
             }
         }
     });
@@ -79,18 +80,12 @@ function vizResults(data) {
                 ['performance'].concat(
                     data.map(x => x.timeSpent * scale))
             ],
-            type: 'bar',
             groups: [
                 ['energy efficiency', 'performance']
             ],
             colors: {
                 'energy efficiency': '#c43131',
                 'performance': '#c4b8b8'
-            }
-        },
-        grid: {
-            y: {
-                lines: [{value:0}]
             }
         }
     });

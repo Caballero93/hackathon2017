@@ -1,3 +1,36 @@
+body {
+  margin: 5px;
+}
+
 form.inline {
   display: inline-block;
+}
+
+.wrapper {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 70%, 30%;
+}
+
+.box {
+  background-color: #f2f4ef;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.a {
+  grid-column: 1;
+  grid-row: 1;
+}
+.b {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+}
+.c {
+  grid-column: 1;
+  grid-row: 2 ;
+}
+.d {
+  grid-column: 1;
+  grid-row: 3 ;
 }

@@ -17,16 +17,23 @@
         <link href="viz.css" rel="stylesheet">
     </head>
     <body onload="vizOnLoad()">
-        <div id="results"></div>
-        <center>
-            <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
-            <form id="refreshRateForm" class="inline">
-                <input id="refreshRate" type="number" />
-                <input type="submit" value="Set refresh rate" />
-            </form>
-        </center>
-        <center>
-            <label id="refreshIndicator"></label>
-        </center>
+        <div class="wrapper">
+            <div class="box a">
+                <div id="results"></div>
+                <center>
+                    <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
+                    <form id="refreshRateForm" class="inline">
+                        <input id="refreshRate" type="number" />
+                        <input type="submit" value="Set refresh rate" />
+                    </form>
+                </center>
+                <center>
+                    <label id="refreshIndicator"></label>
+                </center>
+            </div>
+            <div class="box b"></div>
+            <div class="box c"></div>
+            <div class="box d"> </div>
+        </div>
     </body>
 </html>
