@@ -37,6 +37,9 @@ python3 framework.py
 Visualization is by default available at
 [http://localhost:8000/viz.html](http://localhost:8000/viz.html).
 
+**All the available framework options are placed and explained in
+params.conf**
+
 **Before you start working on your solution consider the proposed
 solution architecture.**
 
