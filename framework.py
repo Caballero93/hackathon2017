@@ -35,7 +35,8 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     start = time.time()
     # poller.poll blocks until message is sent or for passed
     # milliseconds if message is not sent
-    msgs = dict(poller.poll(CFG.max_results_wait * 1000))
+    msgs = dict(poller.poll(
+        None if CFG.DBGPhysics else CFG.max_results_wait * 1000))
     spent = time.time() - start
 
     if socket in msgs and msgs[socket] == zmq.POLLIN:

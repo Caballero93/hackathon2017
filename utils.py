@@ -120,6 +120,8 @@ class Config:
         self.max_results_wait = safe_int(
             framework('maxResultsWait')) # type: Optional[int]
         self.DBG = safe_bool(framework('DBG')) # type: Optional[bool]
+        self.DBGPhysics = safe_bool(
+            framework('DBGPhysics')) # type: Optional[bool]
 
     @staticmethod
     def get_conf() -> ConfigParser:
