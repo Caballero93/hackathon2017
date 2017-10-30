@@ -10,20 +10,11 @@ from typing import *
 import zmq
 from utils import *
 from http_server import run as http_server_run
+from rating import get_physics_metrics
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
-
-def get_physics_metrics(data: DataMessage, results: ResultsMessage,
-                        spent_time: float, match: bool) \
-                        -> Tuple[float, float]:
-    """TODO: this function should be implemented by the team that define
-    physics.
-
-    """
-
-    return 1, 1
 
 def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     -> None:
