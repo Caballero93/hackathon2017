@@ -78,7 +78,7 @@ if __name__ == '__main__':
     time.sleep(lapse_time)
 
     for i in range(CFG.samples_num):
-        data = DataMessage(i, 0, 0, 0)
+        data = DataMessage(i, False, 0.0, 0.0, 0.0, 0.0, 0.0, False, 0.0)
 
         if CFG.DBG:
             print('Framework emits {}'.format(data))

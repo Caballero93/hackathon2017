@@ -8,8 +8,9 @@ import os
 from functools import partial
 from configparser import ConfigParser
 import json
+from enum import Enum
 import zmq
-from typing import Dict, Tuple, Union, Optional
+from typing import Dict, Tuple, Union, Optional, List
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -17,24 +18,50 @@ __license__ = "MIT"
 
 class DataMessage:
     """Message that is sent by the framework to the solution."""
-    def __init__(self, id, one, two, three):
+    def __init__(self, id,
+                 grid_status: bool,
+                 bying_price: float,
+                 selling_price: float,
+                 current_load: float,
+                 solar_produciton: float,
+                 soc_bess: float,
+                 overload: bool,
+                 current_power: float) -> None:
+
         self.id = id
-        self.one = one
-        self.two = two
-        self.three = three
+        self.grid_status = grid_status
+        self.bying_price = bying_price
+        self.selling_price = selling_price
+        self.current_load = current_load
+        self.solar_production = solar_produciton
+        self.soc_bess = soc_bess
+        self.overload = overload
+        self.current_power = current_power
 
     def __str__(self):
         return "id={}, one={}, two={}, three={}" \
             .format(self.id, self.one, self.two, self.three)
 
+class PVMode(Enum):
+    """Photo-voltaic panel working mode."""
+    def __init__(self) -> None:
+        SUPPLY = 1;
+        SELL = 2;
+        OFF = 3;
+
 class ResultsMessage:
     """Message that is sent back to the framework by the solution."""
-    def __init__(self, data_msg: DataMessage, one: int, two: int, three: int) \
-        -> None:
-        self.data_msg = data_msg
-        self.one = one
-        self.two = two
-        self.three = three
+    def __init__(self, data_msg: DataMessage,
+                 load_one: bool,
+                 load_two: bool,
+                 load_three: bool,
+                 power_reference: float,
+                 pv_mode: PVMode) -> None:
+        self.load_one = load_one
+        self.load_two = load_two
+        self.load_three = load_three
+        self.power_reference = power_reference
+        self.pv_mode = pv_mode
 
     def __str__(self):
         return "{}: one={}, two={}, three={}" \
