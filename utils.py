@@ -28,7 +28,6 @@ class DataMessage:
                  soc_bess: float,
                  overload: bool,
                  current_power: float) -> None:
-
         self.id = id
         self.grid_status = grid_status
         self.buying_price = buying_price
@@ -189,8 +188,10 @@ class Config:
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
-def write_a_result(energy_mark: float, performance: float,
-                   soc_bess: float, overload: bool, current_power: float) \
+def write_a_result(energy_mark: float, performance:
+                   float, mg: float, penal: float,
+                   soc_bess: float, overload: bool, current_power: float,
+                   data_msg: DataMessage) \
                    -> None:
     """Writes a single result record in results file."""
     with open(CFG.results, 'r') as f:
@@ -205,7 +206,10 @@ def write_a_result(energy_mark: float, performance: float,
         current.append({'overall': overall,
                         'energyMark': energy_mark,
                         'performance': performance,
-                        'socBess': soc_bess,
-                        'overload': overload,
-                        'currentPower': current_power})
+                        'bessSOC': soc_bess,
+                        'bessOverload': overload,
+                        'bessPower': current_power,
+                        'mainGridPower': mg,
+                        'penal': penal,
+                        'DataMessage': data_msg.__dict__})
         json.dump(current, f)

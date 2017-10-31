@@ -45,7 +45,8 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
                           solution_response, spent))
 
         write_a_result(
-            *get_physics_metrics(data_msg, solution_response, spent, match))
+            *get_physics_metrics(data_msg, solution_response, spent, match),
+            data_msg)
     elif CFG.DBG:
         print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))
@@ -93,15 +94,15 @@ if __name__ == '__main__':
 
     for i, rec in enumerate(profile):
         if i == 0:
-            soc_bess, overload, current_power = ini['socBess'],  \
-                                                ini['overload'], \
-                                                ini['currentPower']
+            soc_bess, overload, current_power = ini['bessSOC'],      \
+                                                ini['bessOverload'], \
+                                                ini['bessPower']
         else:
             with open(CFG.results, 'r') as f:
                 last = json.load(f)[-1]
-                soc_bess, overload, current_power = last['socBess'],  \
-                                                    last['overload'], \
-                                                    last['currentPower']
+                soc_bess, overload, current_power = last['bessSOC'],      \
+                                                    last['bessOverload'], \
+                                                    last['bessPower']
 
         data = DataMessage(i,
                            rec['gridStatus'], rec['buyingPrice'],
