@@ -78,7 +78,7 @@ function vizResults(data) {
                 ['energy efficiency'].concat(
                     data.map(x => x.energyMark * scale)),
                 ['performance'].concat(
-                    data.map(x => x.timeSpent * scale))
+                    data.map(x => x.performance * scale))
             ],
             groups: [
                 ['energy efficiency', 'performance']

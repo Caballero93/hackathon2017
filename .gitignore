@@ -4,3 +4,4 @@ viz/.tern-port
 .typhoon/
 /results.json
 /graphs.py
+.idea/
