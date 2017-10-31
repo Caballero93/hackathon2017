@@ -204,7 +204,7 @@ def write_a_result(energy_mark: float, performance: float,
         overall = current[-1]['overall'] if current else 0 + curr_overall
         current.append({'overall': overall,
                         'energyMark': energy_mark,
-                        'spentTime': spent_time,
+                        'spentTime': performance,
                         'socBess': soc_bess,
                         'overload': overload,
                         'currentPower': current_power})

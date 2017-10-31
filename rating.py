@@ -38,6 +38,8 @@ def energy_mark(consumption: float,
 def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
                         -> Tuple[float, float, float, bool, float]:
+    penal = 0
+
     if not r.load_one and PENAL_L1 == 0:
         penal += 21
     elif not r.load_one and PENAL_L1 > 0:
@@ -147,5 +149,5 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         consumption = 0
 
-    energy_mark = energy_mark(consumption, penal, pv_sell, bess_sell)
-    return energy_mark, 1, soc_bess, overload, current_power
+    em = energy_mark(consumption, penal, pv_sell, bess_sell)
+    return em, 1, soc_bess, overload, current_power
