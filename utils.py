@@ -5,6 +5,7 @@ well as from framework.
 
 import sys
 import os
+import re
 from functools import partial
 from configparser import ConfigParser
 import json
@@ -107,10 +108,12 @@ def safe_int(s: str) -> Optional[int]:
         return None
 
 def safe_bool(s: str) -> Optional[bool]:
-    if s == 'True':
-        return True
-    else:
-        return None
+    return True if s == 'True' else False
+
+def safe_path(s: str) -> Optional[str]:
+    p = os.path.join(*re.split('/|\\\\', s))
+
+    return p if os.path.exists(p) else None
 
 class Config:
     """Class that represents configuration file.
@@ -136,7 +139,8 @@ class Config:
         self.out_port = safe_int(sockets('outPort')) # type: Optional[int]
         self.in_address = sockets('inAddress') # type: Optional[str]
         self.out_address = sockets('outAddress') # type: Optional[str]
-        self.results = results('resultsFile') # type: Optional[str]
+        self.results = safe_path(
+            results('resultsFile')) # type: Optional[str]
         self.results_http_server_port = safe_int(
             results('resultsHTTPServerPort')) # type: Optional[int]
         self.shutdown_http_server = safe_bool(
@@ -149,6 +153,10 @@ class Config:
         self.DBG = safe_bool(framework('DBG')) # type: Optional[bool]
         self.DBGPhysics = safe_bool(
             framework('DBGPhysics')) # type: Optional[bool]
+        self.profile_file = safe_path(
+            framework('profileFile')) # type: Optional[str]
+        self.physics_init = safe_path(
+            framework('physicsInit')) # type: Optional[str]
 
     @staticmethod
     def get_conf() -> ConfigParser:

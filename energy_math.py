@@ -45,6 +45,14 @@ def solar_produciton(t: float) -> float:
     else:
         raise Exception('Time should be between 0 and 24')
 
+def grid_status(s: int) -> None:
+    # TODO:
+    data = []
+    for s in range(s):
+        data.append({'status': 1})
+
+    return json.dumps(data)
+
 def samples_to_time(samples_num: int, sample: int) -> float:
     """Converts sample number to day time."""
     return 24 / samples_num * sample
