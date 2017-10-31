@@ -20,7 +20,7 @@ class DataMessage:
     """Message that is sent by the framework to the solution."""
     def __init__(self, id,
                  grid_status: bool,
-                 bying_price: float,
+                 buying_price: float,
                  selling_price: float,
                  current_load: float,
                  solar_produciton: float,
@@ -30,7 +30,7 @@ class DataMessage:
 
         self.id = id
         self.grid_status = grid_status
-        self.bying_price = bying_price
+        self.buying_price = buying_price
         self.selling_price = selling_price
         self.current_load = current_load
         self.solar_production = solar_produciton

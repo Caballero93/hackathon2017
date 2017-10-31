@@ -5,15 +5,11 @@ __author__ = "Miroslav Nikolic and Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
-from typing import Optional, Tuple
+import json
 from random import random
 from math import pi, cos
-
-def vary(number: float) -> float:
-    sign = -1 if random() <= 0.5 else 1
-    # random number between 2 and 5 percent of starting number
-    variation = (3 * random() + 2) * 0.01 * number
-    return number + (variation * sign)
+from functools import partial
+from typing import Optional, Tuple
 
 def buying_price(t: float) -> Optional[float]:
     if t < 7 or 23 <= t <= 24:
@@ -48,3 +44,21 @@ def solar_produciton(t: float) -> float:
         return 0
     else:
         raise Exception('Time should be between 0 and 24')
+
+def samples_to_time(samples_num: int, sample: int) -> float:
+    """Converts sample number to day time."""
+    return 24 / samples_num * sample
+
+def gen_ideal(samples_num: int) -> str:
+    """Generates ideal profile."""
+    to_time = partial(samples_to_time, samples_num)
+    data = []
+
+    for s in range(samples_num):
+        t = to_time(s)
+        data.append({'buying_price': buying_price(t),
+                     'selling_price': selling_price(t),
+                     'current_load': current_load(t),
+                     'solar_production': solar_produciton(t)})
+
+    return json.dumps(data)

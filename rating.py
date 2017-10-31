@@ -63,7 +63,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             consumption = (int(r.load_one) * 0.2 +
                            int(r.load_two) * 0.5 +
                            int(r.load_three) * 0.3) \
-                           * d.current_load * d.bying_price / 60
+                           * d.current_load * d.buying_price / 60
             bess_sell = 0
 
         current_power = r.power_reference
@@ -88,7 +88,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             consumption = (int(r.load_one) * 0.2 +
                            int(r.load_two) * 0.5 +
                            int(r.load_three) * 0.3) \
-                           * d.current_load * d.bying_price / 60
+                           * d.current_load * d.buying_price / 60
             bess_sell = 0
 
         pv_sell = d.selling_price * d.solar_production / 60
@@ -113,7 +113,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             consumption = (int(r.load_one) * 0.2 +
                            int(r.load_two) * 0.5 +
                            int(r.load_three) * 0.3) \
-                           * d.current_load * d.bying_price / 60
+                           * d.current_load * d.buying_price / 60
             bess_sell = 0
 
         pv_sell = 0
