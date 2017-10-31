@@ -24,7 +24,7 @@ class DataMessage:
                  buying_price: float,
                  selling_price: float,
                  current_load: float,
-                 solar_produciton: float,
+                 solar_production: float,
                  soc_bess: float,
                  overload: bool,
                  current_power: float) -> None:
@@ -34,21 +34,23 @@ class DataMessage:
         self.buying_price = buying_price
         self.selling_price = selling_price
         self.current_load = current_load
-        self.solar_production = solar_produciton
+        self.solar_production = solar_production
         self.soc_bess = soc_bess
         self.overload = overload
         self.current_power = current_power
 
     def __str__(self):
-        return "id={}, one={}, two={}, three={}" \
-            .format(self.id, self.one, self.two, self.three)
+        return "{}, {}, {}, {}, {}, {}, {}, {}, {}" \
+            .format(self.id, self.grid_status, self.buying_price,
+                    self.selling_price, self.current_load,
+                    self.solar_production, self.soc_bess,
+                    self.overload, self.current_power)
 
 class PVMode(Enum):
     """Photo-voltaic panel working mode."""
-    def __init__(self) -> None:
-        SUPPLY = 1;
-        SELL = 2;
-        OFF = 3;
+    SUPPLY = 1;
+    SELL = 2;
+    OFF = 3;
 
 class ResultsMessage:
     """Message that is sent back to the framework by the solution."""
@@ -58,6 +60,7 @@ class ResultsMessage:
                  load_three: bool,
                  power_reference: float,
                  pv_mode: PVMode) -> None:
+        self.data_msg = data_msg
         self.load_one = load_one
         self.load_two = load_two
         self.load_three = load_three
@@ -65,8 +68,9 @@ class ResultsMessage:
         self.pv_mode = pv_mode
 
     def __str__(self):
-        return "{}: one={}, two={}, three={}" \
-            .format(self.data_msg, self.one, self.two, self.three)
+        return "{}: {}, {}, {}, {}, {}" \
+            .format(self.data_msg, self.load_one, self.load_two,
+                    self.load_three, self.power_reference, self.pv_mode)
 
 def bind_sub_socket(address: str, port: int) -> \
     Optional[Tuple[zmq.Socket, zmq.Context]]:
@@ -111,9 +115,7 @@ def safe_bool(s: str) -> Optional[bool]:
     return True if s == 'True' else False
 
 def safe_path(s: str) -> Optional[str]:
-    p = os.path.join(*re.split('/|\\\\', s))
-
-    return p if os.path.exists(p) else None
+    return os.path.join(*re.split('/|\\\\', s))
 
 class Config:
     """Class that represents configuration file.
@@ -187,8 +189,10 @@ class Config:
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
-def write_a_result(energy_mark: float, spent_time: float) -> None:
-    """Writes a single result record in results file"""
+def write_a_result(energy_mark: float, performance: float,
+                   soc_bess: float, overload: bool, current_power: float) \
+                   -> None:
+    """Writes a single result record in results file."""
     with open(CFG.results, 'r') as f:
         if os.path.getsize(CFG.results) == 0:
             current = []
@@ -196,5 +200,12 @@ def write_a_result(energy_mark: float, spent_time: float) -> None:
             current = json.load(f)
 
     with open(CFG.results, 'w') as f:
-        current.append({"energyMark": energy_mark, "timeSpent": spent_time})
+        curr_overall = energy_mark + performance
+        overall = current[-1]['overall'] if current else 0 + curr_overall
+        current.append({'overall': overall,
+                        'energyMark': energy_mark,
+                        'spentTime': spent_time,
+                        'socBess': soc_bess,
+                        'overload': overload,
+                        'currentPower': current_power})
         json.dump(current, f)

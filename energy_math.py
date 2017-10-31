@@ -9,7 +9,7 @@ import json
 from random import random
 from math import pi, cos
 from functools import partial
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, Dict, Union
 
 def buying_price(t: float) -> Optional[float]:
     if t < 7 or 23 <= t <= 24:
@@ -45,28 +45,22 @@ def solar_produciton(t: float) -> float:
     else:
         raise Exception('Time should be between 0 and 24')
 
-def grid_status(s: int) -> None:
-    # TODO:
-    data = []
-    for s in range(s):
-        data.append({'status': 1})
-
-    return json.dumps(data)
-
 def samples_to_time(samples_num: int, sample: int) -> float:
     """Converts sample number to day time."""
     return 24 / samples_num * sample
 
-def gen_ideal(samples_num: int) -> str:
+def gen_ideal(samples_num: int) \
+    -> Tuple[str, List[Dict[str, Union[float, bool]]]]:
     """Generates ideal profile."""
     to_time = partial(samples_to_time, samples_num)
     data = []
 
     for s in range(samples_num):
         t = to_time(s)
-        data.append({'buying_price': buying_price(t),
-                     'selling_price': selling_price(t),
-                     'current_load': current_load(t),
-                     'solar_production': solar_produciton(t)})
+        data.append({'gridStatus': 1,
+                     'buyingPrice': buying_price(t),
+                     'sellingPrice': selling_price(t),
+                     'currentLoad': current_load(t),
+                     'solarProduction': solar_produciton(t)})
 
-    return json.dumps(data)
+    return json.dumps(data), data

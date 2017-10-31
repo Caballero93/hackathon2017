@@ -11,6 +11,7 @@ import zmq
 from utils import *
 from http_server import run as http_server_run
 from rating import get_physics_metrics
+from energy_math import gen_ideal
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -44,7 +45,7 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
                           solution_response, spent))
 
         write_a_result(
-            *get_physics_metrics(data, solution_response, spent, match))
+            *get_physics_metrics(data_msg, solution_response, spent, match))
     elif CFG.DBG:
         print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))
@@ -63,13 +64,50 @@ if __name__ == '__main__':
     with open(CFG.results, 'w'):
         pass
 
+    # Load existing profile or create an ideal one if there is no
+    # profile file
+    if os.path.exists(CFG.profile_file):
+        with open(CFG.profile_file, 'r') as f:
+            profile = json.load(f)
+
+        if CFG.DBG:
+            print('Profile file from {} has loaded...'
+                  .format(CFG.profile_file))
+    else:
+        with open(CFG.profile_file, 'w') as f:
+            to_write, profile = gen_ideal(CFG.samples_num)
+            f.write(to_write)
+
+        if CFG.DBG:
+            print('Ideal profile file has generated at {}'
+                  .format(CFG.profile_file))
+
+    print('Loading physics initialization file')
+    with open(CFG.physics_init, 'r') as f:
+        ini = json.load(f)
+
     lapse_time = CFG.framework_lapse_time or 1
     print('Framework is booting with the lapse time of {}s ...'
           .format(lapse_time))
     time.sleep(lapse_time)
 
-    for i in range(CFG.samples_num):
-        data = DataMessage(i, False, 0.0, 0.0, 0.0, 0.0, 0.0, False, 0.0)
+    for i, rec in enumerate(profile):
+        if i == 0:
+            soc_bess, overload, current_power = ini['socBess'],  \
+                                                ini['overload'], \
+                                                ini['currentPower']
+        else:
+            with open(CFG.results, 'r') as f:
+                last = json.load(f)[-1]
+                soc_bess, overload, current_power = last['socBess'],  \
+                                                    last['overload'], \
+                                                    last['currentPower']
+
+        data = DataMessage(i,
+                           rec['gridStatus'], rec['buyingPrice'],
+                           rec['sellingPrice'], rec['currentLoad'],
+                           rec['solarProduction'],
+                           soc_bess, overload, current_power)
 
         if CFG.DBG:
             print('Framework emits {}'.format(data))
