@@ -18,7 +18,12 @@ def worker(msg: DataMessage) -> ResultsMessage:
     from time import sleep; sleep(1)
     print('D: is going to send {}'.format(data.id))
 
-    return ResultsMessage(msg, False, False, False, 0.0, PVMode.SUPPLY)
+    return ResultsMessage(data_msg=msg,
+                          load_one=False,
+                          load_two=False,
+                          load_three=False,
+                          power_reference=0.0,
+                          pv_mode=PVMode.SUPPLY)
 
 if __name__ == '__main__':
     cntrl = Control()
