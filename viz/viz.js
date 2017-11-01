@@ -20,6 +20,7 @@ function getResults() {
         url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
         type: 'GET',
         success: data => {
+            console.log("Data is here.");
             if (refreshRate != Infinity) {
                 // visualize results after refreshRate seconds
                 setTimeout(() => {
