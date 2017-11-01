@@ -87,3 +87,9 @@ svg.clock {
     stroke: red;
     stroke-width: 4;
 }
+.refresh {
+    float: left;
+    padding: 35px;
+    position: relative;
+    z-index: 100000000;
+}

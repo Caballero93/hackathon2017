@@ -5,15 +5,12 @@
         <title>Typhoon Python hackathon</title>
         <!-- Load c3.css -->
         <link type="text/css" href="bower_components/c3/c3.css" rel="stylesheet">
-
         <!-- Load d3.js and c3.js -->
         <script type="text/javascript" src="bower_components/d3/d3.min.js" charset="utf-8"></script>
         <script type="text/javascript" src="bower_components/c3/c3.min.js"></script>
-
         <!-- Load JQuery -->
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="knockout-3.4.1.js"></script>
-
         <!-- Load visualization -->
         <script type="text/javascript" src="viz.js"></script>
         <link type="text/css"href="viz.css" rel="stylesheet">
@@ -22,6 +19,16 @@
         <div class="wrapper">
             <div class="box a">
                 <div id="results"></div>
+                <div class="refresh">
+                    <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
+                    <form id="refreshRateForm" class="inline">
+                        <input id="refreshRate" type="number" />
+                        <input type="submit" value="Set refresh rate" />
+                    </form>
+                </div>
+                <div class="refresh">
+                    <label id="refreshIndicator"></label>
+                </div>
             </div>
             <div class="box b">
                 <div class="clock" onload="showD3Clock();"></div>
@@ -34,14 +41,14 @@
                     <tr><td class="counter gridstatus">Grid status</td> <td class="result gridstatus">7</td></tr>
                 </table>
             </div>
-            <div class="box c"></div>
+            <div class="box c"><div id="results2"></div></div>
             <div class="box d">
                 <div class="gauges" align="center">
-                    <span id="power1GaugeContainer" data-bind="text: timespan"></span>
-                    <span id="power2GaugeContainer" data-bind="text: timespan"></span>
-                    <span id="power3GaugeContainer" data-bind="text: timespan"></span>
-                    <span id="power4GaugeContainer" data-bind="text: timespan"></span>
-                    <span class="svg"><svg id="fillgauge1" height="180" data-bind="levelData"></svg></span>
+                    <span id="power1GaugeContainer"></span>
+                    <span id="power2GaugeContainer"></span>
+                    <span id="power3GaugeContainer"></span>
+                    <span id="power4GaugeContainer"></span>
+                    <span class="svg"><svg id="fillgauge1" height="180"></svg></span>
                 </div>
             </div>
         </div>

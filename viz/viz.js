@@ -76,10 +76,32 @@ function vizResults(data) {
         bindto: '#results',
         data: {
             columns: [
-                ['energy efficiency'].concat(
-                    data.map(x => x.energyMark * scale)),
+                ['Overall cost'].concat(
+                    data.map(x => x.overall * scale))/*,
                 ['performance'].concat(
-                    data.map(x => x.performance * scale))
+                    data.map(x => x.performance * scale))*/
+            ],
+            groups: [
+                ['Overall cost']
+            ],
+            colors: {
+                'Overall cost': '#c43131'
+            }
+        },
+        subchart: {
+            show: true
+        }
+    });
+       var results2 = c3.generate({
+        bindto: '#results2',
+        data: {
+            columns: [
+                ['ESS power'].concat(
+                    data.map(x => x.bessPower * scale)),
+                ['Load power'].concat(
+                    data.map(x => x.mainGridPower * scale)),
+                ['Grid power'].concat(
+                    data.map(x => x.mainGridPower * scale))
             ],
             groups: [
                 ['energy efficiency', 'performance']
@@ -87,6 +109,17 @@ function vizResults(data) {
             colors: {
                 'energy efficiency': '#c43131',
                 'performance': '#c4b8b8'
+            },
+            axes: {
+                data1: 'y',
+                data2: 'y2'
+            }
+        },
+        subchart: {
+            show: true
+        },axis: {
+            y2: {
+                show: true
             }
         }
     });
@@ -106,12 +139,10 @@ function vizResults(data) {
     console.log('selling_price ' + data[data.length-1].DataMessage.selling_price);
     console.log('current_load ' + data[data.length-1].DataMessage.current_load);
     console.log('solar_production ' + data[data.length-1].DataMessage.solar_production);
-    console.log('soc_bess ' + data[data.length-1].DataMessage.soc_bess);
-    console.log('overload ' + data[data.length-1].DataMessage.overload);
-    console.log('current_power ' + data[data.length-1].DataMessage.current_power);
+    console.log('bessSOC ' + data[data.length-1].DataMessage.bessSOC);
+    console.log('bessOverload ' + data[data.length-1].DataMessage.bessOverload);
+    console.log('mainGridPower ' + data[data.length-1].DataMessage.mainGridPower);
     console.log(' ');
-
-
 }
 
 
