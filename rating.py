@@ -39,6 +39,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
                         -> Tuple[float, float, float, float,
                                  float, bool, float]:
+    global OVERLOADS
     penal = 0.0
 
     if not r.load_one and PENAL_L1 == 0:
