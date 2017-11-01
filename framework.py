@@ -5,9 +5,11 @@ testing and rating of solutions.
 """
 
 import time
+import sys
 from multiprocessing import Process
 from typing import *
 import zmq
+from os.path import join
 from utils import *
 from http_server import run as http_server_run
 from rating import get_physics_metrics
@@ -52,6 +54,11 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
               .format(CFG.max_results_wait))
 
 if __name__ == '__main__':
+    # When command line argument is given write outputs to files
+    if len(sys.argv) > 1:
+        sys.stdout = open(join(TYPHOON_DIR, 'framework.log'), 'w+')
+        sys.stderr = open(join(TYPHOON_DIR, 'framework.err'), 'w+')
+
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
     result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)
     results_poll = zmq.Poller()

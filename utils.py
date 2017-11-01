@@ -17,6 +17,8 @@ __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
+TYPHOON_DIR = '.typhoon'
+
 class DataMessage:
     """Message that is sent by the framework to the solution."""
     def __init__(self, id,

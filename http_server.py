@@ -12,9 +12,7 @@ from urllib.parse import urlparse
 from os.path import splitext, exists, join
 from os import makedirs
 import sys
-from utils import CFG
-
-TYPHOON_DIR = '.typhoon'
+from utils import CFG, TYPHOON_DIR
 
 def prepare_dot_dir():
     """Prepare .typhoon directory used to store server specific data."""
