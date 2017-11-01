@@ -217,9 +217,9 @@ def write_a_result(energy_mark: float, performance:
             current = json.load(f)
 
     with open(CFG.results, 'w') as f:
-        curr_overall = energy_mark + performance
-        overall = current[-1]['overall'] if current else 0 + curr_overall
-        current.append({'overall': overall,
+        current_mark = energy_mark + performance
+        last = current[-1]['overall'] if current else 0
+        current.append({'overall': last + current_mark,
                         'energyMark': energy_mark,
                         'performance': performance,
                         'bessSOC': soc_bess,
