@@ -4,36 +4,55 @@
         <meta charset="utf-8">
         <title>Typhoon Python hackathon</title>
         <!-- Load c3.css -->
-        <link href="bower_components/c3/c3.css" rel="stylesheet">
+        <link type="text/css" href="bower_components/c3/c3.css" rel="stylesheet">
 
         <!-- Load d3.js and c3.js -->
-        <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
-        <script src="bower_components/c3/c3.min.js"></script>
+        <script type="text/javascript" src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="bower_components/c3/c3.min.js"></script>
 
         <!-- Load JQuery -->
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="knockout-3.4.1.js"></script>
+
         <!-- Load visualization -->
         <script type="text/javascript" src="viz.js"></script>
-        <link href="viz.css" rel="stylesheet">
+        <link type="text/css"href="viz.css" rel="stylesheet">
     </head>
-    <body onload="vizOnLoad()">
+    <body onload="vizOnLoad();initialize();showD3Clock()">
         <div class="wrapper">
             <div class="box a">
                 <div id="results"></div>
-                <center>
-                    <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
-                    <form id="refreshRateForm" class="inline">
-                        <input id="refreshRate" type="number" />
-                        <input type="submit" value="Set refresh rate" />
-                    </form>
-                </center>
-                <center>
-                    <label id="refreshIndicator"></label>
-                </center>
             </div>
-            <div class="box b"></div>
+            <div class="box b">
+                <div class="clock" onload="showD3Clock();"></div>
+                <table class="counters">
+                    <tr><td class="counter totalcost">Total cost ($)</td><td class="result totalcost">2</td></tr>
+                    <tr><td class="counter energycost">Electricity cost ($)</td><td class="result energycost">3</td></tr>
+                    <tr><td class="counter penaltycost">Penalty cost ($)</td> <td class="result penaltycost">4</td></tr>
+                    <tr><td class="counter panaltycounter">Penalty counter</td> <td class="result panaltycounter">5</td></tr>
+                    <tr><td class="counter avgruntime">Average runtime</td><td class="result avgruntime">6</td></tr>
+                    <tr><td class="counter gridstatus">Grid status</td> <td class="result gridstatus">7</td></tr>
+                </table>
+            </div>
             <div class="box c"></div>
-            <div class="box d"> </div>
+            <div class="box d">
+                <div class="gauges" align="center">
+                    <span id="power1GaugeContainer" data-bind="text: timespan"></span>
+                    <span id="power2GaugeContainer" data-bind="text: timespan"></span>
+                    <span id="power3GaugeContainer" data-bind="text: timespan"></span>
+                    <span id="power4GaugeContainer" data-bind="text: timespan"></span>
+                    <span class="svg"><svg id="fillgauge1" height="180" data-bind="levelData"></svg></span>
+                </div>
+            </div>
         </div>
+    <script language="JavaScript">
+     var gauge1 = loadLiquidFillGauge("fillgauge1", 0);
+     var config1 = liquidFillGaugeDefaultSettings();
+     config1.waveAnimate = false;
+     config1.waveHeight = 10;
+     config1.waveCount = 0;
+     config1.minValue = 0;
+     config1.maxValue = 100;
+    </script>
     </body>
 </html>
