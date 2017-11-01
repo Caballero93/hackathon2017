@@ -71,6 +71,22 @@ class ResultsMessage:
             .format(self.data_msg, self.load_one, self.load_two,
                     self.load_three, self.power_reference, self.pv_mode)
 
+    def validate(self):
+        if not type(self.load_one) is bool:
+            raise Exception('ResultsMessage load_one should be a bool.')
+        elif not type(self.load_two) is bool:
+            raise Exception('ResultsMessage load_two should be a bool.')
+        elif not type(self.load_three) is bool:
+            raise Exception('ResultsMessage load_three should be a bool.')
+        elif not type(self.power_reference) is float:
+            raise Exception('ResultsMessage power_reference should be a float.')
+        elif not type(self.pv_mode) is PVMode:
+            raise Exception(('ResultsMessage pv_mode should be a value'
+                             'from PVMode enum: {} or {} or {}')
+                            .format(PVMode.OFF, PVMode.SELL, PVMode.SUPPLY))
+
+        return self
+
 def bind_sub_socket(address: str, port: int) -> \
     Optional[Tuple[zmq.Socket, zmq.Context]]:
     """Make subscribe socket and return pair of socket itself and its

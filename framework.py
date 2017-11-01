@@ -32,7 +32,7 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
     spent = time.time() - start
 
     if socket in msgs and msgs[socket] == zmq.POLLIN:
-        solution_response = socket.recv_pyobj()
+        solution_response = socket.recv_pyobj().validate()
 
         match = True
         if solution_response.data_msg.id != data_msg.id:
