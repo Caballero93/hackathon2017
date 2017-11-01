@@ -25,25 +25,25 @@ class DataMessage:
                  selling_price: float,
                  current_load: float,
                  solar_production: float,
-                 soc_bess: float,
-                 overload: bool,
-                 current_power: float) -> None:
+                 bessSOC: float,
+                 bessOverload: bool,
+                 mainGridPower: float) -> None:
         self.id = id
         self.grid_status = grid_status
         self.buying_price = buying_price
         self.selling_price = selling_price
         self.current_load = current_load
         self.solar_production = solar_production
-        self.soc_bess = soc_bess
-        self.overload = overload
-        self.current_power = current_power
+        self.bessSOC = bessSOC
+        self.bessOverload = bessOverload
+        self.mainGridPower = mainGridPower
 
     def __str__(self):
         return "{}, {}, {}, {}, {}, {}, {}, {}, {}" \
             .format(self.id, self.grid_status, self.buying_price,
                     self.selling_price, self.current_load,
-                    self.solar_production, self.soc_bess,
-                    self.overload, self.current_power)
+                    self.solar_production, self.bessSOC,
+                    self.bessOverload, self.mainGridPower)
 
 class PVMode(Enum):
     """Photo-voltaic panel working mode."""

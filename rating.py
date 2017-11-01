@@ -72,9 +72,9 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         current_power = r.power_reference
 
         if r.power_reference >= 0:
-            soc_bess = d.soc_bess - r.power_reference / 600
+            soc_bess = d.bessSOC - r.power_reference / 600
         else:
-            soc_bess = d.soc_bess + r.power_reference / 600
+            soc_bess = d.bessSOC + r.power_reference / 600
 
         pv_sell = 0
         overload = False
@@ -98,9 +98,9 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         overload = False
 
         if r.power_reference >= 0:
-            soc_bess = d.soc_bess - r.power_reference / 600
+            soc_bess = d.bessSOC - r.power_reference / 600
         else:
-            soc_bess = d.soc_bess + r.power_reference / 600
+            soc_bess = d.bessSOC + r.power_reference / 600
 
         current_power = r.power_reference
 
@@ -123,9 +123,9 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         overload = False
 
         if r.power_reference >= 0:
-            soc_bess = d.soc_bess - r.power_reference / 600
+            soc_bess = d.bessSOC - r.power_reference / 600
         else:
-            soc_bess = d.soc_bess + r.power_reference / 600
+            soc_bess = d.bessSOC + r.power_reference / 600
 
         current_power = r.power_reference
 
@@ -140,7 +140,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         bess_sell = 0
         pv_sell = 0
 
-        soc_bess = d.soc_bess - current_power / 600
+        soc_bess = d.bessSOC - current_power / 600
         if current_power > 8:
             overload = True
             OVERLOADS += 1
