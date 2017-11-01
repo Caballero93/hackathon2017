@@ -15,7 +15,6 @@ def worker(msg: DataMessage) -> ResultsMessage:
     """TODO: This function should be implemented by contestors."""
     print('D: received {}'.format(data.id))
     print('Worker doing its job, message is {} ...'.format(msg))
-    from time import sleep; sleep(1)
     print('D: is going to send {}'.format(data.id))
 
     return ResultsMessage(data_msg=msg,
