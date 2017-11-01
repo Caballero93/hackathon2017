@@ -39,7 +39,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
                         -> Tuple[float, float, float, float,
                                  float, bool, float]:
-    penal = 0
+    penal = 0.0
 
     if not r.load_one and PENAL_L1 == 0:
         penal += 21
@@ -61,7 +61,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         # we sell
         if mg < 0:
             bess_sell = abs(mg)
-            consumption = 0
+            consumption = 0.0
         else:
             consumption = (int(r.load_one) * 0.2 +
                            int(r.load_two) * 0.5 +
@@ -76,7 +76,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         else:
             soc_bess = d.bessSOC + r.power_reference / 600
 
-        pv_sell = 0
+        pv_sell = 0.0
         overload = False
 
     elif d.grid_status and r.pv_mode == PVMode.SELL:
@@ -86,7 +86,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         if mg < 0:
             bess_sell = abs(mg)
-            consumption = 0
+            consumption = 0.0
         else:
             consumption = (int(r.load_one) * 0.2 +
                            int(r.load_two) * 0.5 +
