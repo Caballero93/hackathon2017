@@ -41,6 +41,8 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                                  float, bool, float]:
     global OVERLOADS
     penal = 0.0
+    if r.power_reference > 8:
+        r.power_reference = 8
 
     if not r.load_one and PENAL_L1 == 0:
         penal += 21
@@ -61,21 +63,15 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                        r.power_reference, d.solar_production, r.pv_mode)
         # we sell
         if mg < 0:
-            bess_sell = abs(mg)
+            bess_sell = abs(mg) * d.selling_price / 60
             consumption = 0.0
         else:
-            consumption = (int(r.load_one) * 0.2 +
-                           int(r.load_two) * 0.5 +
-                           int(r.load_three) * 0.3) \
-                           * d.current_load * d.buying_price / 60
+            consumption = mg * d.buying_price / 60
             bess_sell = 0
 
         current_power = r.power_reference
 
-        if r.power_reference >= 0:
-            soc_bess = d.bessSOC - r.power_reference / 600
-        else:
-            soc_bess = d.bessSOC + r.power_reference / 600
+        soc_bess = d.bessSOC - r.power_reference / 600
 
         pv_sell = 0.0
         overload = False
@@ -86,7 +82,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                        r.power_reference, d.solar_production, r.pv_mode)
 
         if mg < 0:
-            bess_sell = abs(mg)
+            bess_sell = abs(mg) * d.selling_price / 60
             consumption = 0.0
         else:
             consumption = (int(r.load_one) * 0.2 +
@@ -111,7 +107,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                        r.power_reference, d.solar_production, r.pv_mode)
 
         if mg < 0:
-            bess_sell = abs(mg)
+            bess_sell = abs(mg) * d.selling_price / 60
             consumption = 0
         else:
             consumption = (int(r.load_one) * 0.2 +
@@ -151,6 +147,11 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         consumption = 0
         mg = 0
+
+    if 0 > soc_bess:
+        soc_bess = 0
+    if soc_bess > 1:
+        soc_bess = 1
 
     em = energy_mark(consumption, penal, pv_sell, bess_sell)
     return em, 1, mg, penal, soc_bess, overload, current_power
