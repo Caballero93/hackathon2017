@@ -130,7 +130,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         if OVERLOADS >= 2:
             penal = 25.5
 
-        current_power = main_grid(True, int(r.load_one), int(r.load_two),
+        current_power = main_grid(False, int(r.load_one), int(r.load_two),
                                   int(r.load_three), d.current_load,
                                   r.power_reference, d.solar_production,
                                   r.pv_mode)
