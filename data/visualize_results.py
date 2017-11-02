@@ -21,9 +21,9 @@ mainGridPower = []
 penal = []
 current_load = []
 solar_production = []
+real_load = []
+pv_power = []
 
-
-    
 for data_point in d:
     overall.append(data_point['overall'])
     energyMark.append(data_point['energyMark'])
@@ -35,7 +35,9 @@ for data_point in d:
     penal.append(data_point['penal'])
     current_load.append(data_point['DataMessage']['current_load'])
     solar_production.append(data_point['DataMessage']['solar_production'])
-    
+    real_load.append(data_point['real_load'])
+    pv_power.append(data_point['pv_power'])
+
 
 t = np.arange(0., 24., 1./sample_rate)
  
@@ -43,8 +45,10 @@ fig, ax = plt.subplots(3, sharex=True)
 ax[0].step(t, overall, picker=True)
 ax[0].step(t, energyMark)
 ax[0].step(t, performance)
+ax[0].step(t, real_load)
+ax[0].step(t, pv_power)
 ax[0].set_title('Results')
-ax[0].legend(['Overall', 'Energy mark', 'Performance'], loc = 'upper right', fontsize = 'small')
+ax[0].legend(['Overall', 'Energy mark', 'Performance', 'Real load', 'PV power'], loc = 'upper right', fontsize = 'small')
 ax[1].step(t, bessSOC)
 ax[1].step(t, bessOverload)
 ax[1].legend(['BESS SOC', 'BESS overload'], loc = 'upper right', fontsize = 'small')
