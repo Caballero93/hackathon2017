@@ -77,16 +77,16 @@ function vizResults(data) {
         bindto: '#results',
         data: {
             columns: [
-                ['Overall cost'].concat(
+                ['Total cost'].concat(
                     data.map(x => x.overall * scale))/*,
                 ['performance'].concat(
                     data.map(x => x.performance * scale))*/
             ],
             groups: [
-                ['Overall cost']
+                ['Total cost']
             ],
             colors: {
-                'Overall cost': '#c43131'
+                'Total cost': '#c43131'
             }
         },
         subchart: {
@@ -100,7 +100,7 @@ function vizResults(data) {
                 ['ESS power'].concat(
                     data.map(x => x.bessPower * scale)),
                 ['Load power'].concat(
-                    data.map(x => x.mainGridPower * scale)),
+                    data.map(x => x.DataMessage.current_load * scale)),
                 ['Grid power'].concat(
                     data.map(x => x.mainGridPower * scale))
             ],
@@ -124,7 +124,136 @@ function vizResults(data) {
             }
         }
     });
-    var overall_output = data[data.length-1].overall;
+	
+	var power1GaugeContainer1 = c3.generate({
+        bindto: '#power1GaugeContainer',
+        data: {
+            columns: [
+                    ['Grid Power',(data[data.length-1].DataMessage.mainGridPower).toFixed(2)]
+                ],
+                type: 'gauge'
+                },
+                gauge: {
+                    label: {
+                        format: function(value, ratio) {
+                            return value;
+                        },
+                        show: true // to turn off the min/max labels.
+                    },
+                    min: -1000, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+                    max: 1000, // 100 is default
+                    units: ' mainGridPower (W)',
+                    width: 39 // for adjusting arc thickness
+                },
+                color: {
+                    pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                    threshold: {
+                        unit: ' W', // percentage is default
+                        max: 100, // 100 is default
+                        values: [30, 60, 90, 100]
+                    }
+                },
+                size: {
+                    height: 180
+                }
+    });
+    var power1GaugeContainer2 = c3.generate({
+        bindto: '#power2GaugeContainer',
+        data: {
+            columns: [
+                    ['ESS power',(data[data.length-1].bessPower).toFixed(2)]
+                ],
+                type: 'gauge'
+                },
+                gauge: {
+                    label: {
+                        format: function(value, ratio) {
+                            return value;
+                        },
+                        show: true // to turn off the min/max labels.
+                    },
+                    min: -1000, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+                    max: 1000, // 100 is default
+                    units: ' bessPower',
+                    width: 39 // for adjusting arc thickness
+                },
+                color: {
+                    pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                    threshold: {
+                        unit: ' W', // percentage is default
+                        max: 100, // 100 is default
+                        values: [30, 60, 90, 100]
+                    }
+                },
+                size: {
+                    height: 180
+                }
+    });
+    var power1GaugeContainer3 = c3.generate({
+        bindto: '#power3GaugeContainer',
+        data: {
+            columns: [
+                    ['PV',(data[data.length-1].DataMessage.solar_production).toFixed(2)]
+                ],
+                type: 'gauge'
+                },
+                gauge: {
+                    label: {
+                        format: function(value, ratio) {
+                            return value;
+                        },
+                        show: true // to turn off the min/max labels.
+                    },
+                    min: -1000, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+                    max: 1000, // 100 is default
+                    units: ' solar_production',
+                    width: 39 // for adjusting arc thickness
+                },
+                color: {
+                    pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                    threshold: {
+                        unit: ' W', // percentage is default
+                        max: 100, // 100 is default
+                        values: [30, 60, 90, 100]
+                    }
+                },
+                size: {
+                    height: 180
+                }
+    });
+    var power1GaugeContainer4 = c3.generate({
+        bindto: '#power4GaugeContainer',
+        data: {
+            columns: [
+                    ['Load Power',(data[data.length-1].DataMessage.current_load).toFixed(2)]
+                ],
+                type: 'gauge'
+                },
+                gauge: {
+                    label: {
+                        format: function(value, ratio) {
+                            return value;
+                        },
+                        show: true // to turn off the min/max labels.
+                    },
+                    min: -1000, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+                    max: 1000, // 100 is default
+                    units: ' current_Load',
+                    width: 39 // for adjusting arc thickness
+                },
+                color: {
+                    pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                    threshold: {
+                        unit: ' W', // percentage is default
+                        max: 100, // 100 is default
+                        values: [30, 60, 90, 100]
+                    }
+                },
+                size: {
+                    height: 180
+                }
+    });
+ /*   var overall_output = data[data.length-1].overall;
     console.log('overall ' + overall_output);
     console.log('energyMark ' + data[data.length-1].energyMark);
     console.log('performance ' + data[data.length-1].performance);
@@ -144,6 +273,7 @@ function vizResults(data) {
     console.log('bessOverload ' + data[data.length-1].DataMessage.bessOverload);
     console.log('mainGridPower ' + data[data.length-1].DataMessage.mainGridPower);
     console.log(' ');
+	*/
 }
 
 

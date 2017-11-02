@@ -8,10 +8,18 @@ from typing import Tuple
 from hackathon.utils.utils import DataMessage, PVMode, ResultsMessage
 import math
 
-PENAL_L1 = 0
-PENAL_L2 = 0
-PENAL_L3 = 0
-OVERLOADS = 0
+penal_l1_cnt = 0
+penal_l2_cnt = 0
+penal_l3_cnt = 0
+overload_cnt = 0
+
+PENAL_L1_INIT = 20
+PENAL_L1_CONT = 1
+
+PENAL_L2_INIT = 4
+PENAL_L2_CONT = 0.4
+
+PENAL_L3_CONT = 0.1
 
 def main_grid(on: bool,
               load_one: int,
@@ -38,25 +46,36 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
                         -> Tuple[float, float, float, float,
                                  float, bool, float]:
-    global OVERLOADS
+    global overload_cnt
+    global penal_l1_cnt
+    global penal_l2_cnt
+
     penal = 0.0
     if r.power_reference > 8:
         r.power_reference = 8
     elif r.power_reference < -8:
         r.power_reference = -8
 
-    if not r.load_one and PENAL_L1 == 0:
-        penal += 21
-    elif not r.load_one and PENAL_L1 > 0:
-        penal += 1
+    if not r.load_one:
+        if penal_l1_cnt == 0:
+            penal += PENAL_L1_INIT + PENAL_L1_CONT
+            penal_l1_cnt+=1
+        else:
+            penal += PENAL_L1_CONT
+    else:
+        penal_l1_cnt = 0
 
-    if not r.load_two and PENAL_L2 == 0:
-        penal += 4.4
-    elif not r.load_two and PENAL_L2 > 0:
-        penal += 0.4
+    if not r.load_two:
+        if penal_l2_cnt == 0:
+            penal += PENAL_L2_INIT + PENAL_L2_CONT
+            penal_l2_cnt += 1
+        else:
+            penal += PENAL_L2_CONT
+    else:
+        penal_l2_cnt = 0
 
-    if not r.load_three and PENAL_L3 >= 0:
-        penal += 0.1
+    if not r.load_three:
+        penal += PENAL_L3_CONT
 
     if d.grid_status:
         if (d.bessSOC == 0 and r.power_reference > 0) or (d.bessSOC == 1 and r.power_reference < 0):
@@ -79,13 +98,23 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         overload = False
 
-        if 0 > soc_bess:
-            soc_bess = 0
-        if soc_bess > 1:
-            soc_bess = 1
 
     elif not d.grid_status:
-        if OVERLOADS == 2:
+        current_power = main_grid(False, int(r.load_one), int(r.load_two),
+                                  int(r.load_three), d.current_load,
+                                  r.power_reference, d.solar_production,
+                                  r.pv_mode)
+
+        soc_bess = d.bessSOC - current_power / 600
+
+        if abs(current_power) > 8 or (d.bessSOC >= 1 and current_power < 0) or (d.bessSOC <= 0 and current_power > 0):
+            overload = True
+            overload_cnt += 1
+        else:
+            overload = False
+            overload_cnt = 0
+
+        if overload_cnt > 1:
             penal = 25.5
             current_power = 0
             r.load_one = False
@@ -93,26 +122,18 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             r.load_three = False
             r.pv_mode = PVMode.OFF
             overload = False
-            OVERLOADS = 0
+            overload_cnt = 0
             soc_bess = d.bessSOC
-        else:
-            current_power = main_grid(False, int(r.load_one), int(r.load_two),
-                                      int(r.load_three), d.current_load,
-                                      r.power_reference, d.solar_production,
-                                      r.pv_mode)
 
-            soc_bess = d.bessSOC - current_power / 600
-
-            if current_power > 8 or (d.bessSOC == 1 and current_power < 0) or (d.bessSOC == 0 and current_power > 0):
-                overload = True
-                OVERLOADS += 1
-            else:
-                overload = False
-                OVERLOADS = 0
 
         consumption = 0
         mg = 0
         bess_sell = 0
+
+    if 0 > soc_bess:
+        soc_bess = 0
+    if soc_bess > 1:
+        soc_bess = 1
 
     em = energy_mark(consumption, penal, bess_sell)
     return em, 1, mg, penal, soc_bess, overload, current_power
