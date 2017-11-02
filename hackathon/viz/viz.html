@@ -15,7 +15,7 @@
         <script type="text/javascript" src="viz.js"></script>
         <link type="text/css"href="viz.css" rel="stylesheet">
     </head>
-    <body onload="vizOnLoad();initialize();showD3Clock()">
+    <body onload="vizOnLoad();showD3Clock()">
         <div class="wrapper">
             <div class="box a">
                 <div id="results"></div>
@@ -33,7 +33,7 @@
             <div class="box b">
                 <div class="clock" onload="showD3Clock();"></div>
                 <table class="counters">
-                    <tr><td class="counter totalcost">Total cost ($)</td><td class="result totalcost">2</td></tr>
+                    <tr><td class="counter totalcost">Total cost ($)</td><td class="result totalcost" data-bind="text: counter1">2</td></tr>
                     <tr><td class="counter energycost">Electricity cost ($)</td><td class="result energycost">3</td></tr>
                     <tr><td class="counter penaltycost">Penalty cost ($)</td> <td class="result penaltycost">4</td></tr>
                     <tr><td class="counter panaltycounter">Penalty counter</td> <td class="result panaltycounter">5</td></tr>
@@ -52,14 +52,6 @@
                 </div>
             </div>
         </div>
-    <script language="JavaScript">
-     var gauge1 = loadLiquidFillGauge("fillgauge1", 0);
-     var config1 = liquidFillGaugeDefaultSettings();
-     config1.waveAnimate = false;
-     config1.waveHeight = 10;
-     config1.waveCount = 0;
-     config1.minValue = 0;
-     config1.maxValue = 100;
-    </script>
+
     </body>
 </html>
