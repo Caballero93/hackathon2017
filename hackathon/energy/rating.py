@@ -143,5 +143,5 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
     em = energy_mark(consumption, penal, bess_sell)
     pv_power = d.solar_production if r.pv_mode == PVMode.ON else 0
-    return em, 1, mg, r_load, pv_power, penal, soc_bess, \
+    return em, 1, mg, penal, r_load, pv_power, soc_bess, \
         overload, current_power
