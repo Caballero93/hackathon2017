@@ -1,7 +1,7 @@
 """This module facilitates communication with the framework component."""
 
 from typing import Optional, Generator
-from utils import *
+from hackathon.utils.utils import *
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."

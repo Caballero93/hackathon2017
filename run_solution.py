@@ -4,10 +4,11 @@ be provided by contestants
 
 """
 
-from control import Control
 from os.path import join
 import sys
-from utils import ResultsMessage, DataMessage, PVMode, TYPHOON_DIR
+from hackathon.utils.control import Control
+from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
+    TYPHOON_DIR
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
