@@ -43,6 +43,11 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     penal = 0.0
     if r.power_reference > 8:
         r.power_reference = 8
+    elif r.power_reference < -8:
+        r.power_reference = -8
+
+    if (d.bessSOC == 0):
+        r.power_reference = 0
 
     if not r.load_one and PENAL_L1 == 0:
         penal += 21
@@ -121,18 +126,20 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         current_power = r.power_reference
 
     elif not d.grid_status:
-        if OVERLOADS >= 2:
-            penal = 25.5
-
         current_power = main_grid(False, int(r.load_one), int(r.load_two),
                                   int(r.load_three), d.current_load,
                                   r.power_reference, d.solar_production,
                                   r.pv_mode)
+
+        if OVERLOADS >= 2 or (d.bessSOC == 0 and current_power > 0):
+            penal = 25.5
+            current_power = 0
+
         bess_sell = 0
         pv_sell = 0
 
         soc_bess = d.bessSOC - current_power / 600
-        
+
         if current_power > 8:
             overload = True
             OVERLOADS += 1
