@@ -21,21 +21,22 @@ PENAL_L2_CONT = 0.4
 
 PENAL_L3_CONT = 0.1
 
-def main_grid(on: bool,
-              load_one: int,
+def real_load(load_one: int,
               load_two: int,
               load_three: int,
-              current_load: float,
+              current_load: float) -> float:
+    return (load_one * 0.2 + load_two * 0.5 + load_three * 0.3) * current_load
+
+def main_grid(on: bool,
+              real_load: float,
               power_reference: float,
               solar_production: float,
               pv_mode: PVMode) -> float:
     s_prod = solar_production if pv_mode == PVMode.ON else 0
-    factor = (load_one * 0.2 + load_two * 0.5 + load_three * 0.3) \
-             * current_load
     if on:
-        return factor - power_reference - s_prod
+        return real_load - power_reference - s_prod
     else:
-        return factor - s_prod
+        return real_load - s_prod
 
 def energy_mark(consumption: float,
                 penal: float,
@@ -44,7 +45,7 @@ def energy_mark(consumption: float,
 
 def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
-                        -> Tuple[float, float, float, float,
+                        -> Tuple[float, float, float, float, float, float,
                                  float, bool, float]:
     global overload_cnt
     global penal_l1_cnt
@@ -78,12 +79,15 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         penal += PENAL_L3_CONT
 
     if d.grid_status:
-        if (d.bessSOC == 0 and r.power_reference > 0) or (d.bessSOC == 1 and r.power_reference < 0):
+        if (d.bessSOC == 0 and r.power_reference > 0) \
+           or (d.bessSOC == 1 and r.power_reference < 0):
             r.power_reference = 0
 
-        mg = main_grid(True, int(r.load_one), int(r.load_two),
-                       int(r.load_three), d.current_load,
-                       r.power_reference, d.solar_production, r.pv_mode)
+        r_load = real_load(int(r.load_one), int(r.load_two),
+                           int(r.load_three), d.current_load)
+
+        mg = main_grid(True, r_load, r.power_reference,
+                       d.solar_production, r.pv_mode)
         # we sell
         if mg < 0:
             bess_sell = abs(mg) * d.selling_price / 60
@@ -100,14 +104,16 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
 
     elif not d.grid_status:
-        current_power = main_grid(False, int(r.load_one), int(r.load_two),
-                                  int(r.load_three), d.current_load,
-                                  r.power_reference, d.solar_production,
-                                  r.pv_mode)
+        r_load = real_load(int(r.load_one), int(r.load_two),
+                           int(r.load_three), d.current_load)
+
+        current_power = main_grid(False, r_load, r.power_reference,
+                                  d.solar_production, r.pv_mode)
 
         soc_bess = d.bessSOC - current_power / 600
 
-        if abs(current_power) > 8 or (d.bessSOC >= 1 and current_power < 0) or (d.bessSOC <= 0 and current_power > 0):
+        if abs(current_power) > 8 or (soc_bess >= 1 and current_power < 0) \
+           or (soc_bess <= 0 and current_power > 0):
             overload = True
             overload_cnt += 1
         else:
@@ -136,4 +142,6 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         soc_bess = 1
 
     em = energy_mark(consumption, penal, bess_sell)
-    return em, 1, mg, penal, soc_bess, overload, current_power
+    pv_power = d.solar_production if r.pv_mode == PVMode.ON else 0
+    return em, 1, mg, r_load, pv_power, penal, soc_bess, \
+        overload, current_power

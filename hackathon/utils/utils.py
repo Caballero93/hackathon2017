@@ -212,8 +212,8 @@ class Config:
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
-def write_a_result(energy_mark: float, performance:
-                   float, mg: float, penal: float,
+def write_a_result(energy_mark: float, performance: float,
+                   mg: float, penal: float, r_load: float, pv_power: float,
                    soc_bess: float, overload: bool, current_power: float,
                    data_msg: DataMessage) \
                    -> None:
@@ -232,6 +232,8 @@ def write_a_result(energy_mark: float, performance:
                         'overall_energy': last_energy + energy_mark,
                         'energyMark': energy_mark,
                         'performance': performance,
+                        'real_load': r_load,
+                        'pv_power': pv_power,
                         'bessSOC': soc_bess,
                         'bessOverload': overload,
                         'bessPower': current_power,
@@ -253,3 +255,13 @@ def read_results() -> Optional[List[Any]]:
             return content
         except:
             time.sleep(0.01)
+
+def config_outs(args: List[str], log_name: str) -> None:
+    """If run is called with command line args then log outputs to files.
+
+    """
+    if len(args) > 1:
+        sys.stdout = open(os.path.join(TYPHOON_DIR, '{}.log'
+                                       .format(log_name)), 'w')
+        sys.stderr = open(os.path.join(TYPHOON_DIR, '{}_err.log'
+                                       .format(log_name)), 'w')
