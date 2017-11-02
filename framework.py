@@ -5,11 +5,10 @@ testing and rating of solutions.
 """
 
 import time
-import sys
 from multiprocessing import Process
 from typing import *
 import zmq
-from os.path import join
+import json
 from utils import *
 from http_server import run as http_server_run
 from rating import get_physics_metrics
@@ -54,11 +53,6 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
               .format(CFG.max_results_wait))
 
 if __name__ == '__main__':
-    # When command line argument is given write outputs to files
-    if len(sys.argv) > 1:
-        sys.stdout = open(join(TYPHOON_DIR, 'framework.log'), 'w+')
-        sys.stderr = open(join(TYPHOON_DIR, 'framework.err'), 'w+')
-
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
     result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)
     results_poll = zmq.Poller()
@@ -105,11 +99,10 @@ if __name__ == '__main__':
                                                 ini['bessOverload'], \
                                                 ini['bessPower']
         else:
-            with open(CFG.results, 'r') as f:
-                last = json.load(f)[-1]
-                soc_bess, overload, current_power = last['bessSOC'],      \
-                                                    last['bessOverload'], \
-                                                    last['bessPower']
+            last = read_results()[-1]
+            soc_bess, overload, current_power = last['bessSOC'],      \
+                                                last['bessOverload'], \
+                                                last['bessPower']
 
         data = DataMessage(i,
                            rec['gridStatus'], rec['buyingPrice'],
@@ -125,6 +118,10 @@ if __name__ == '__main__':
 
     # Send terminating message to the solution
     data_emit_socket.send_pyobj(False)
+
+    # Write results json from dump
+    with open(CFG.results, 'w') as f:
+        json.dump(read_results(), f)
 
     if CFG.shutdown_http_server:
         # Gracefully terminate HTTP server process that serves results

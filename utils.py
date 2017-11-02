@@ -8,10 +8,10 @@ import os
 import re
 from functools import partial
 from configparser import ConfigParser
-import json
+import pickle
 from enum import Enum
 import zmq
-from typing import Dict, Tuple, Union, Optional, List
+from typing import Tuple, Optional, List, Any
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -160,6 +160,8 @@ class Config:
         self.out_address = sockets('outAddress') # type: Optional[str]
         self.results = safe_path(
             results('resultsFile')) # type: Optional[str]
+        self.results_dump = self.get_dump_name(
+            self.results) # type Optional[str]
         self.results_http_server_port = safe_int(
             results('resultsHTTPServerPort')) # type: Optional[int]
         self.shutdown_http_server = safe_bool(
@@ -203,6 +205,10 @@ class Config:
         except:
             return None
 
+    @staticmethod
+    def get_dump_name(results: str) -> str:
+        return os.path.splitext(results)[0] + '.out'
+
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
@@ -212,13 +218,13 @@ def write_a_result(energy_mark: float, performance:
                    data_msg: DataMessage) \
                    -> None:
     """Writes a single result record in results file."""
-    with open(CFG.results, 'r') as f:
-        if os.path.getsize(CFG.results) == 0:
+    with open(CFG.results_dump, 'rb') as f:
+        if os.path.getsize(CFG.results_dump) == 0:
             current = []
         else:
-            current = json.load(f)
+            current = pickle.load(f)
 
-    with open(CFG.results, 'w') as f:
+    with open(CFG.results_dump, 'wb') as f:
         current_mark = energy_mark + performance
         last = current[-1]['overall'] if current else 0
         current.append({'overall': last + current_mark,
@@ -230,4 +236,11 @@ def write_a_result(energy_mark: float, performance:
                         'mainGridPower': mg,
                         'penal': penal,
                         'DataMessage': data_msg.__dict__})
-        json.dump(current, f)
+        pickle.dump(current, f)
+
+def read_results() -> Optional[List[Any]]:
+    """Load results python object."""
+    with open(CFG.results_dump, 'rb') as f:
+        content = pickle.load(f)
+
+    return content

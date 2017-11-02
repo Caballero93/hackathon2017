@@ -9,10 +9,11 @@ __license__ = "MIT"
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
-from os.path import splitext, exists, join
+from os.path import exists, join
 from os import makedirs
 import sys
-from utils import CFG, TYPHOON_DIR
+import json
+from utils import CFG, TYPHOON_DIR, read_results
 
 def prepare_dot_dir():
     """Prepare .typhoon directory used to store server specific data."""
@@ -29,8 +30,7 @@ class ResultsRequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
 
-            with open(CFG.results, 'r') as f:
-                data = f.read()
+            data = json.dumps(read_results())
 
             self.wfile.write(bytes(data, "utf8"))
         else:
