@@ -27,11 +27,6 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           pv_mode=PVMode.SUPPLY)
 
 if __name__ == '__main__':
-    # When command line argument is given write outputs to files
-    if len(sys.argv) > 1:
-        sys.stdout = open(join(TYPHOON_DIR, 'solution.log'), 'w+')
-        sys.stderr = open(join(TYPHOON_DIR, 'solution.err'), 'w+')
-
     cntrl = Control()
 
     for data in cntrl.get_data():

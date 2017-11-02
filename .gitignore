@@ -6,3 +6,4 @@ viz/.tern-port
 /graphs.py
 .idea/
 /data/profiles.json
+/results.out
