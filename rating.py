@@ -94,10 +94,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         pv_sell = d.selling_price * d.solar_production / 60
         overload = False
 
-        if r.power_reference >= 0:
-            soc_bess = d.bessSOC - r.power_reference / 600
-        else:
-            soc_bess = d.bessSOC + r.power_reference / 600
+        soc_bess = d.bessSOC - r.power_reference / 600
 
         current_power = r.power_reference
 
@@ -119,10 +116,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         pv_sell = 0
         overload = False
 
-        if r.power_reference >= 0:
-            soc_bess = d.bessSOC - r.power_reference / 600
-        else:
-            soc_bess = d.bessSOC + r.power_reference / 600
+        soc_bess = d.bessSOC - r.power_reference / 600
 
         current_power = r.power_reference
 
@@ -138,6 +132,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         pv_sell = 0
 
         soc_bess = d.bessSOC - current_power / 600
+        
         if current_power > 8:
             overload = True
             OVERLOADS += 1
