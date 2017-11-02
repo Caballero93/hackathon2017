@@ -25,7 +25,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           load_two=False,
                           load_three=False,
                           power_reference=0.0,
-                          pv_mode=PVMode.SUPPLY)
+                          pv_mode=PVMode.OFF)
 
 if __name__ == '__main__':
     cntrl = Control()
