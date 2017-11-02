@@ -6,7 +6,7 @@ import numpy as np
 
 sample_rate = 60. # samples per hour
 
-with open('test_profiles_dm1.json') as json_data:
+with open('./profile_1.json') as json_data:
     d = json.load(json_data)
 
 gridStatus = []
