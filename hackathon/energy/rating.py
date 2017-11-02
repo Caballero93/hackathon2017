@@ -79,12 +79,15 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         penal += PENAL_L3_CONT
 
     if d.grid_status:
-        if (d.bessSOC == 0 and r.power_reference > 0) or (d.bessSOC == 1 and r.power_reference < 0):
+        if (d.bessSOC == 0 and r.power_reference > 0) \
+           or (d.bessSOC == 1 and r.power_reference < 0):
             r.power_reference = 0
 
-        rload = real_load(int(r.load_one), int(r.load_two), int(r.load_three), d.current_load)
+        r_load = real_load(int(r.load_one), int(r.load_two),
+                           int(r.load_three), d.current_load)
 
-        mg = main_grid(True, rload, r.power_reference, d.solar_production, r.pv_mode)
+        mg = main_grid(True, r_load, r.power_reference,
+                       d.solar_production, r.pv_mode)
         # we sell
         if mg < 0:
             bess_sell = abs(mg) * d.selling_price / 60
@@ -101,13 +104,16 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
 
     elif not d.grid_status:
-        rload = real_load(int(r.load_one), int(r.load_two), int(r.load_three), d.current_load)
+        r_load = real_load(int(r.load_one), int(r.load_two),
+                           int(r.load_three), d.current_load)
 
-        current_power = main_grid(False, rload, r.power_reference, d.solar_production, r.pv_mode)
+        current_power = main_grid(False, r_load, r.power_reference,
+                                  d.solar_production, r.pv_mode)
 
         soc_bess = d.bessSOC - current_power / 600
 
-        if abs(current_power) > 8 or (soc_bess >= 1 and current_power < 0) or (soc_bess <= 0 and current_power > 0):
+        if abs(current_power) > 8 or (soc_bess >= 1 and current_power < 0) \
+           or (soc_bess <= 0 and current_power > 0):
             overload = True
             overload_cnt += 1
         else:
@@ -137,4 +143,5 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
     em = energy_mark(consumption, penal, bess_sell)
     pv_power = d.solar_production if r.pv_mode == PVMode.ON else 0
-    return em, 1, mg, rload, pv_power, penal, soc_bess, overload, current_power
+    return em, 1, mg, r_load, pv_power, penal, soc_bess, \
+        overload, current_power

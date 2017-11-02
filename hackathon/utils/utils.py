@@ -212,8 +212,8 @@ class Config:
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
-def write_a_result(energy_mark: float, performance:
-                   float, mg: float, penal: float, rload: float, pv_power: float,
+def write_a_result(energy_mark: float, performance: float,
+                   mg: float, penal: float, r_load: float, pv_power: float,
                    soc_bess: float, overload: bool, current_power: float,
                    data_msg: DataMessage) \
                    -> None:
@@ -232,7 +232,7 @@ def write_a_result(energy_mark: float, performance:
                         'overall_energy': last_energy + energy_mark,
                         'energyMark': energy_mark,
                         'performance': performance,
-                        'real_load': rload,
+                        'real_load': r_load,
                         'pv_power': pv_power,
                         'bessSOC': soc_bess,
                         'bessOverload': overload,
