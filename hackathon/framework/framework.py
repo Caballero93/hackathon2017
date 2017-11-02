@@ -10,7 +10,7 @@ import zmq
 import json
 from hackathon.utils.utils import *
 from hackathon.energy.rating import get_physics_metrics
-from hackathon.energy.energy_math import gen_ideal
+from hackathon.energy.energy_math import gen_profile
 from hackathon.framework.http_server import run as http_server_run
 
 __author__ = "Novak Boskov"
@@ -80,7 +80,7 @@ def run():
                   .format(CFG.profile_file))
     else:
         with open(CFG.profile_file, 'w') as f:
-            to_write, profile = gen_ideal(CFG.samples_num)
+            to_write, profile = gen_profile(CFG.samples_num)
             f.write(to_write)
 
         if CFG.DBG:

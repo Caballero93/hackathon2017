@@ -49,7 +49,7 @@ def samples_to_time(samples_num: int, sample: int) -> float:
     """Converts sample number to day time."""
     return 24 / samples_num * sample
 
-def gen_ideal(samples_num: int) \
+def gen_profile(samples_num: int, load_scaling=1.0, solar_scaling=1.0, blackouts=[]) \
     -> Tuple[str, List[Dict[str, Union[float, bool]]]]:
     """Generates ideal profile."""
     to_time = partial(samples_to_time, samples_num)
@@ -57,10 +57,15 @@ def gen_ideal(samples_num: int) \
 
     for s in range(samples_num):
         t = to_time(s)
-        data.append({'gridStatus': 1,
+        gs = 1
+        if blackouts:
+            for blackout in blackouts:
+                if (s>=blackout[0]) and (s<=blackout[1]):
+                    gs = 0
+        data.append({'gridStatus': gs,
                      'buyingPrice': buying_price(t),
                      'sellingPrice': selling_price(t),
-                     'currentLoad': current_load(t),
-                     'solarProduction': solar_produciton(t)})
+                     'currentLoad': current_load(t)*load_scaling,
+                     'solarProduction': solar_produciton(t)*solar_scaling})
 
     return json.dumps(data), data
