@@ -35,7 +35,22 @@ python3 run_framework.py
 ```
 
 Visualization is by default available at
-[http://localhost:8000/viz.html](http://localhost:8000/viz.html).
+[http://localhost:8000/viz.html](http://localhost:8000/viz.html). All
+these steps are also available as single script `run.py` that can be
+run using:
+
+``` shell
+python3 run.py
+```
+
+or
+
+``` shell
+./run.py
+```
+
+*This script will run solution then framework and as the very last
+step it will open your default system browser at visualization page.*
 
 **All the available framework options are placed and explained in
 params.conf**

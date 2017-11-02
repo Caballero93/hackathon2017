@@ -4,22 +4,23 @@ be provided by contestants
 
 """
 
-from os.path import join
 import sys
+import os
 from hackathon.utils.control import Control
 from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
-    TYPHOON_DIR
+    TYPHOON_DIR, config_outs
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 def worker(msg: DataMessage) -> ResultsMessage:
-    """TODO: This function should be implemented by contestors."""
-    print('D: received {}'.format(data.id))
+    """TODO: This function should be implemented by contestants."""
+    print('D: received {}'.format(msg.id))
     print('Worker doing its job, message is {} ...'.format(msg))
-    print('D: is going to send {}'.format(data.id))
+    print('D: is going to send {}'.format(msg.id))
 
+    # Dummy result is returned in every cycle here
     return ResultsMessage(data_msg=msg,
                           load_one=True,
                           load_two=True,
@@ -27,8 +28,14 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           power_reference=0.0,
                           pv_mode=PVMode.ON)
 
-if __name__ == '__main__':
+def run(args) -> None:
+    config_outs(args, 'solution')
+
     cntrl = Control()
 
     for data in cntrl.get_data():
         cntrl.push_results(worker(data))
+
+
+if __name__ == '__main__':
+    run(sys.argv)

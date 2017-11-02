@@ -255,3 +255,13 @@ def read_results() -> Optional[List[Any]]:
             return content
         except:
             time.sleep(0.01)
+
+def config_outs(args: List[str], log_name: str) -> None:
+    """If run is called with command line args then log outputs to files.
+
+    """
+    if len(args) > 1:
+        sys.stdout = open(os.path.join(TYPHOON_DIR, '{}.log'
+                                       .format(log_name)), 'w')
+        sys.stderr = open(os.path.join(TYPHOON_DIR, '{}_err.log'
+                                       .format(log_name)), 'w')
