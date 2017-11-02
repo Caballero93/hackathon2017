@@ -1,4 +1,6 @@
 import json
+import time
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -37,15 +39,7 @@ ax[2].legend(['Total load', 'Solar production'], loc = 'upper right', fontsize =
 
 plt.xlim(0, 24)
 
- 
-# plt.subplot(211) 
-# plt.plot(t,gridStatus)
-# plt.xlim(0, 24)
-# #plt.xticks(np.arange(0., 24., 4.))
-# plt.xlabel('Grid status')
-
-# plt.subplot(212)
-# plt.plot(t,buyingPrice)
-# plt.xlabel('Buying price')
+formatter = matplotlib.ticker.FuncFormatter(lambda m, x: time.strftime('%H:%M', time.gmtime(m*60*60)))
+ax[2].xaxis.set_major_formatter(formatter)
 
 plt.show()
