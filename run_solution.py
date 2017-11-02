@@ -8,7 +8,7 @@ import sys
 import os
 from hackathon.utils.control import Control
 from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
-    TYPHOON_DIR
+    TYPHOON_DIR, config_outs
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -28,7 +28,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           power_reference=0.0,
                           pv_mode=PVMode.ON)
 
-def run():
+def run(args) -> None:
+    config_outs(args, 'solution')
+
     cntrl = Control()
 
     for data in cntrl.get_data():
@@ -36,8 +38,4 @@ def run():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        sys.stdout = open(os.path.join(TYPHOON_DIR, 'solution.log'))
-        sys.stderr = open(os.path.join(TYPHOON_DIR, 'solution_err.log'))
-
-    run()
+    run(sys.argv)
