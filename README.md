@@ -25,13 +25,13 @@ pip install -r requirements.txt
 Then run the proposed solution with:
 
 ``` shell
-python3 solution_example.py
+python3 run_solution.py
 ```
 
 Now run the framework part to start getting data from it:
 
 ``` shell
-python3 framework.py
+python3 run_framework.py
 ```
 
 Visualization is by default available at
@@ -88,11 +88,11 @@ if __name__ == '__main__':
 One can run proposed solution using:
 
 ``` shell
-./solution_example.py
+./run_solution.py
 ```
 
 Or:
 
 ``` shell
-python solution_example.py
+python run_solution.py
 ```

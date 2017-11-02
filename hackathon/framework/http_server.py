@@ -10,10 +10,10 @@ __license__ = "MIT"
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from os.path import exists, join
-from os import makedirs
+from os import makedirs, path, linesep
 import sys
 import json
-from utils import CFG, TYPHOON_DIR, read_results
+from hackathon.utils.utils import CFG, TYPHOON_DIR, read_results
 
 def prepare_dot_dir():
     """Prepare .typhoon directory used to store server specific data."""
@@ -23,6 +23,8 @@ def prepare_dot_dir():
 class ResultsRequestHandler(BaseHTTPRequestHandler):
     """Simple HTTP request handler"""
     def do_GET(self) -> None:
+        dir_to_serve = path.join('hackathon', 'viz')
+
         self.send_response(200)
 
         url = urlparse(self.path)
@@ -35,7 +37,7 @@ class ResultsRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(data, "utf8"))
         else:
             try:
-                with open("{}{}".format('viz', url.path), 'r') as f:
+                with open(dir_to_serve + url.path, 'r') as f:
                     html = f.read()
 
                 self.send_header("Content-Length", str(len(html)))

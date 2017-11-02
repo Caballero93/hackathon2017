@@ -5,7 +5,7 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 from typing import Tuple
-from utils import DataMessage, PVMode, ResultsMessage
+from hackathon.utils.utils import DataMessage, PVMode, ResultsMessage
 import math
 
 PENAL_L1 = 0

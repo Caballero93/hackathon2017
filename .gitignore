@@ -2,8 +2,8 @@ __pycache__/
 /results.csv
 viz/.tern-port
 .typhoon/
-/results.json
 /graphs.py
 .idea/
 /data/profiles.json
-/results.out
+data/results.json
+data/results.out

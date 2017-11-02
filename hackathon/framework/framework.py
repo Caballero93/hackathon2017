@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """This module represents Typhoon HIL framework that is used for
 testing and rating of solutions.
 
@@ -9,10 +8,10 @@ from multiprocessing import Process
 from typing import *
 import zmq
 import json
-from utils import *
-from http_server import run as http_server_run
-from rating import get_physics_metrics
-from energy_math import gen_ideal
+from hackathon.utils.utils import *
+from hackathon.energy.rating import get_physics_metrics
+from hackathon.energy.energy_math import gen_ideal
+from hackathon.framework.http_server import run as http_server_run
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -52,7 +51,7 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
         print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))
 
-if __name__ == '__main__':
+def run():
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
     result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)
     results_poll = zmq.Poller()
