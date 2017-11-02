@@ -6,6 +6,7 @@ well as from framework.
 import sys
 import os
 import re
+import time
 from functools import partial
 from configparser import ConfigParser
 import pickle
@@ -239,8 +240,15 @@ def write_a_result(energy_mark: float, performance:
         pickle.dump(current, f)
 
 def read_results() -> Optional[List[Any]]:
-    """Load results python object."""
-    with open(CFG.results_dump, 'rb') as f:
-        content = pickle.load(f)
+    """Load results python object from dump file. If file is still open
+    wait for 10 milliseconds
 
-    return content
+    """
+    while True:
+        try:
+            with open(CFG.results_dump, 'rb+') as f:
+                content = pickle.load(f)
+
+            return content
+        except:
+            time.sleep(0.01)
