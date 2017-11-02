@@ -20,11 +20,11 @@ def worker(msg: DataMessage) -> ResultsMessage:
     print('D: is going to send {}'.format(data.id))
 
     return ResultsMessage(data_msg=msg,
-                          load_one=False,
-                          load_two=False,
-                          load_three=False,
+                          load_one=True,
+                          load_two=True,
+                          load_three=True,
                           power_reference=0.0,
-                          pv_mode=PVMode.SUPPLY)
+                          pv_mode=PVMode.ON)
 
 if __name__ == '__main__':
     cntrl = Control()
