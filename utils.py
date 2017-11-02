@@ -217,7 +217,7 @@ def write_a_result(energy_mark: float, performance:
                    soc_bess: float, overload: bool, current_power: float,
                    data_msg: DataMessage) \
                    -> None:
-    """Writes a single result record in results file."""
+    """Writes a single result record in results dump."""
     with open(CFG.results_dump, 'rb') as f:
         if os.path.getsize(CFG.results_dump) == 0:
             current = []
