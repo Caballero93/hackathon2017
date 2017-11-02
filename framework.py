@@ -66,6 +66,10 @@ if __name__ == '__main__':
     with open(CFG.results, 'w'):
         pass
 
+    # Create results dump file, truncate if exists
+    with open(CFG.results_dump, 'w'):
+        pass
+
     # Load existing profile or create an ideal one if there is no
     # profile file
     if os.path.exists(CFG.profile_file):
