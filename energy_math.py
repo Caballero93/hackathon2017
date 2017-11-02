@@ -29,17 +29,17 @@ def selling_price(t: float) -> Optional[float]:
 
 def current_load(t: float) -> float:
     if 3 <= t < 13:
-        return 5/2 * (cos(1/5 * pi * (t - 8)) + 1) + 3
+        return (cos(1/5 * pi * (t - 8)) + 1) + 3
     elif 13 <= t <= 24:
-        return 6 * (cos(1/7 * pi * (t - 20)) + 1) + 3
+        return 2.5 * (cos(1/7 * pi * (t - 20)) + 1) + 3
     elif 0 <= t <3:
-        return 6 * (cos(1/7 * pi * (t + 4)) + 1) + 3
+        return 2.5 * (cos(1/7 * pi * (t + 4)) + 1) + 3
     else:
         raise Exception('Time should be between 0 and 24')
 
 def solar_produciton(t: float) -> float:
     if 7 <= t < 19:
-        return 4 * (cos(1/6 * pi * (t - 13)) + 1)
+        return 2 * (cos(1/6 * pi * (t - 13)) + 1)
     elif 0 <= t < 7 or 19 <= t <= 24:
         return 0
     else:
