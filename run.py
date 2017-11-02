@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""This module runs both your contestor's solution and framework."""
+"""This module runs both contestant's solution and framework."""
 
 import webbrowser
 from multiprocessing import Process
@@ -8,9 +8,9 @@ import run_framework as framework
 from hackathon.utils.utils import CFG
 
 if __name__ == '__main__':
-    solution = Process(target=solution.run)
+    solution = Process(target=solution.run, args=('log', ))
     solution.start()
-    framework = Process(target=framework.run)
+    framework = Process(target=framework.run, args=('log', ))
     framework.start()
 
     webbrowser.open('http://localhost:{}/viz.html'

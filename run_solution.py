@@ -4,8 +4,8 @@ be provided by contestants
 
 """
 
-from os.path import join
 import sys
+import os
 from hackathon.utils.control import Control
 from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
     TYPHOON_DIR
@@ -15,11 +15,12 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 def worker(msg: DataMessage) -> ResultsMessage:
-    """TODO: This function should be implemented by contestors."""
+    """TODO: This function should be implemented by contestants."""
     print('D: received {}'.format(msg.id))
     print('Worker doing its job, message is {} ...'.format(msg))
     print('D: is going to send {}'.format(msg.id))
 
+    # Dummy result is returned in every cycle here
     return ResultsMessage(data_msg=msg,
                           load_one=True,
                           load_two=True,
@@ -35,4 +36,8 @@ def run():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        sys.stdout = open(os.path.join(TYPHOON_DIR, 'solution.log'))
+        sys.stderr = open(os.path.join(TYPHOON_DIR, 'solution_err.log'))
+
     run()
