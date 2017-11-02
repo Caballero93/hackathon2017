@@ -227,7 +227,9 @@ def write_a_result(energy_mark: float, performance:
     with open(CFG.results_dump, 'wb') as f:
         current_mark = energy_mark + performance
         last = current[-1]['overall'] if current else 0
+        last_energy = current[-1]['overall_energy'] if current else 0
         current.append({'overall': last + current_mark,
+                        'overall_energy': last_energy + energy_mark,
                         'energyMark': energy_mark,
                         'performance': performance,
                         'bessSOC': soc_bess,
