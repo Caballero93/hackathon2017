@@ -50,9 +50,8 @@ class DataMessage:
 
 class PVMode(Enum):
     """Photo-voltaic panel working mode."""
-    SUPPLY = 1;
-    SELL = 2;
-    OFF = 3;
+    OFF = 0;
+    ON = 1;
 
 class ResultsMessage:
     """Message that is sent back to the framework by the solution."""
@@ -85,8 +84,8 @@ class ResultsMessage:
             raise Exception('ResultsMessage power_reference should be a float.')
         elif not type(self.pv_mode) is PVMode:
             raise Exception(('ResultsMessage pv_mode should be a value'
-                             'from PVMode enum: {} or {} or {}')
-                            .format(PVMode.OFF, PVMode.SELL, PVMode.SUPPLY))
+                             'from PVMode enum: {} or {}')
+                            .format(PVMode.OFF, PVMode.ON))
 
         return self
 
@@ -228,7 +227,9 @@ def write_a_result(energy_mark: float, performance:
     with open(CFG.results_dump, 'wb') as f:
         current_mark = energy_mark + performance
         last = current[-1]['overall'] if current else 0
+        last_energy = current[-1]['overall_energy'] if current else 0
         current.append({'overall': last + current_mark,
+                        'overall_energy': last_energy + energy_mark,
                         'energyMark': energy_mark,
                         'performance': performance,
                         'bessSOC': soc_bess,

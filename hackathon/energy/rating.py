@@ -21,7 +21,7 @@ def main_grid(on: bool,
               power_reference: float,
               solar_production: float,
               pv_mode: PVMode) -> float:
-    s_prod = solar_production if pv_mode == PVMode.SUPPLY else 0
+    s_prod = solar_production if pv_mode == PVMode.ON else 0
     factor = (load_one * 0.2 + load_two * 0.5 + load_three * 0.3) \
              * current_load
     if on:
@@ -31,9 +31,8 @@ def main_grid(on: bool,
 
 def energy_mark(consumption: float,
                 penal: float,
-                pv_sell: float,
                 bess_sell: float) -> float:
-    return consumption + penal - pv_sell - bess_sell
+    return consumption + penal - bess_sell
 
 def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
@@ -45,9 +44,6 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         r.power_reference = 8
     elif r.power_reference < -8:
         r.power_reference = -8
-
-    if (d.bessSOC == 0):
-        r.power_reference = 0
 
     if not r.load_one and PENAL_L1 == 0:
         penal += 21
@@ -62,7 +58,10 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     if not r.load_three and PENAL_L3 >= 0:
         penal += 0.1
 
-    if d.grid_status and r.pv_mode == PVMode.SUPPLY:
+    if d.grid_status:
+        if (d.bessSOC == 0 and r.power_reference > 0) or (d.bessSOC == 1 and r.power_reference < 0):
+            r.power_reference = 0
+
         mg = main_grid(True, int(r.load_one), int(r.load_two),
                        int(r.load_three), d.current_load,
                        r.power_reference, d.solar_production, r.pv_mode)
@@ -78,82 +77,40 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         soc_bess = d.bessSOC - r.power_reference / 600
 
-        pv_sell = 0.0
         overload = False
 
-    elif d.grid_status and r.pv_mode == PVMode.SELL:
-        mg = main_grid(True, int(r.load_one), int(r.load_two),
-                       int(r.load_three), d.current_load,
-                       r.power_reference, d.solar_production, r.pv_mode)
-
-        if mg < 0:
-            bess_sell = abs(mg) * d.selling_price / 60
-            consumption = 0.0
-        else:
-            consumption = (int(r.load_one) * 0.2 +
-                           int(r.load_two) * 0.5 +
-                           int(r.load_three) * 0.3) \
-                           * d.current_load * d.buying_price / 60
-            bess_sell = 0
-
-        pv_sell = d.selling_price * d.solar_production / 60
-        overload = False
-
-        soc_bess = d.bessSOC - r.power_reference / 600
-
-        current_power = r.power_reference
-
-    elif d.grid_status and r.pv_mode == PVMode.OFF:
-        mg = main_grid(True, int(r.load_one), int(r.load_two),
-                       int(r.load_three), d.current_load,
-                       r.power_reference, d.solar_production, r.pv_mode)
-
-        if mg < 0:
-            bess_sell = abs(mg) * d.selling_price / 60
-            consumption = 0
-        else:
-            consumption = (int(r.load_one) * 0.2 +
-                           int(r.load_two) * 0.5 +
-                           int(r.load_three) * 0.3) \
-                           * d.current_load * d.buying_price / 60
-            bess_sell = 0
-
-        pv_sell = 0
-        overload = False
-
-        soc_bess = d.bessSOC - r.power_reference / 600
-
-        current_power = r.power_reference
+        if 0 > soc_bess:
+            soc_bess = 0
+        if soc_bess > 1:
+            soc_bess = 1
 
     elif not d.grid_status:
-        current_power = main_grid(False, int(r.load_one), int(r.load_two),
-                                  int(r.load_three), d.current_load,
-                                  r.power_reference, d.solar_production,
-                                  r.pv_mode)
-
-        if OVERLOADS >= 2 or (d.bessSOC == 0 and current_power > 0):
+        if OVERLOADS >= 2:
             penal = 25.5
             current_power = 0
-
-        bess_sell = 0
-        pv_sell = 0
-
-        soc_bess = d.bessSOC - current_power / 600
-
-        if current_power > 8:
-            overload = True
-            OVERLOADS += 1
+            r.load_one = False
+            r.load_two = False
+            r.load_three = False
+            r.pv_mode = PVMode.OFF
         else:
-            overload = False
-            OVERLOADS = 0
+            current_power = main_grid(False, int(r.load_one), int(r.load_two),
+                                      int(r.load_three), d.current_load,
+                                      r.power_reference, d.solar_production,
+                                      r.pv_mode)
 
-        consumption = 0
-        mg = 0
+            bess_sell = 0
 
-    if 0 > soc_bess:
-        soc_bess = 0
-    if soc_bess > 1:
-        soc_bess = 1
+            soc_bess = d.bessSOC - current_power / 600
 
-    em = energy_mark(consumption, penal, pv_sell, bess_sell)
+            if current_power > 8 or (d.bessSOC == 1 and current_power < 0) or (d.bessSOC == 0 and current_power > 0):
+                overload = True
+                OVERLOADS += 1
+            else:
+                overload = False
+                OVERLOADS = 0
+
+            consumption = 0
+            mg = 0
+
+    em = energy_mark(consumption, penal, bess_sell)
     return em, 1, mg, penal, soc_bess, overload, current_power
