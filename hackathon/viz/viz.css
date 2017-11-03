@@ -2,14 +2,14 @@ body,svg,text,input,div,a, button,table, td {
     font-family:Helvetica,Arial,Verdana,sans-serif;
 }
 body {
-  margin: 5px;
+  margin: 0;
 }
 form.inline {
   display: inline-block;
 }
 
 .wrapper {
-	margin-top:105px;
+	margin-top:70px;
 }
 .wrapper.left{
 	width:74%;
@@ -21,6 +21,8 @@ form.inline {
 	width: 24%;
 	padding-left:15px;
 	float:left;
+	border-left:1px solid #e8e8e8;
+	min-height:1000px;
 }
 .box {
   border-radius: 5px;
@@ -42,18 +44,20 @@ form.inline {
 	padding:10px;
 	background-color:#fff;
 	z-index: 1000000000;
-	margin-top:22px;
+	border-bottom:1px solid #e8e8e8;
+	height:55px;
 }
 .one-third.column {
-	width:33.3%;
+	width:24%;
 	float:left;	
 }
 .one-third.column table {
 	width:60%;
 }
 .two-thirds.column {
-	width:66.6%;
+	width:76%;
 	float:left;
+	margin-top:5px;
 }
 .counters {
     width:100%;
@@ -145,4 +149,8 @@ table.counters.electricity td {
 }
 .hackathon_logo svg {
 	/*transform: scale(0.8);*/
+}
+div.counters {
+	font-size:26px;
+	margin-top:12px;
 }
