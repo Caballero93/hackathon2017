@@ -75,22 +75,10 @@ var overall_output;
 function vizResults(data) {
     var scale = 100;
 
-    var price = data[data.length - 1].overall;
-    $("#totalcost").html(Math.round(price * 100)/100 + ' $');
-
-    var cost = data[data.length - 1].overall_energy;
-    $("#energycost").html(Math.round(cost * 100)/100 + ' $');
-
-//    var avg_runtime = data[data.length - 1].DataMessage.grid_status
-//    $("#avgruntime").html(avg_runtime);
-
-    var grid_st = data[data.length - 1].DataMessage.grid_status
-    $("#gridstatus").html(grid_st);
-
-//    var x_size = Array.apply(null, Array(data.length)).map(function (_, i) {return i;});
-
-    // Penalties
+    // Penalties and costs
     var penalty_num = 0;
+    var price = data[data.length - 1].overall;
+    var cost = data[data.length - 1].overall_energy;
 
     // data for the graph 1
     var overall_cost = [];
@@ -130,6 +118,9 @@ function vizResults(data) {
     }
 
     // Update penalty info on the HTML
+    $("#totalcost").html(Math.round(price * 100)/100 + ' $');
+    $("#energycost").html(Math.round(cost * 100)/100 + ' $');
+    $("#computational_cost").html(Math.round(computation_cost[penalty_cost.length -1 ]  * 100)/100 + ' $');
     $("#penaltycost").html(Math.round(penalty_cost[penalty_cost.length -1 ] * 100)/100 + ' $');
     $("#panaltycounter").html(penalty_num);
 
