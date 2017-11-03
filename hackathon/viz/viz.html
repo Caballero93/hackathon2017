@@ -83,32 +83,37 @@
                 <td id="totalcost" class="result energycost" data-bind="text: counter1">0</td>
             </tr></table></div>
 </div>
-<div class="wrapper">
-<div class="header">Python Hackathon<br><span style="font-size:16px;font-weight:300 !important;">Smart energy menagement challange</span>
-<br>
-</div>
+<div class="wrapper left">
+	<div class="header">Python Hackathon<br><span style="font-size:16px;font-weight:300 !important;">Smart energy menagement challange</span>
+	<br>
+	</div>
     <div class="box a">
         <div id="graph_1"><!-- Plotly chart will be drawn inside this DIV --></div>
     </div>
-    <div class="box b">
+	    <div class="box c">
+        <div id="graph_2"><!-- Plotly chart will be drawn inside this DIV --></div>
+    </div>
+</div>
+<div class="wrapper right">
+   <div class="box b">
         <!--<div class="clock" onload="showD3Clock();"></div>-->
       <table class="counters electricity">
         <tr>
-                <td width="51%" class="counter energycost">Electricity cost</td>
+                <td width="51%" class="counter energycost">Electricity cost:</td>
                 <td width="49%" class="result energycost" id="energycost">0</td>
         </tr>
         <tr>
-                <td width="51%" class="counter computational_cost">Computational cost</td>
+                <td width="51%" class="counter computational_cost">Computational cost:</td>
                 <td width="49%" class="result computational_cost" id="computational_cost">0</td>
         </tr>
       </table>
         <table class="counters other">
             <tr>
-                <td width="50%" class="counter penaltycost">Penalty cost</td>
+                <td width="50%" class="counter penaltycost">Penalty cost:</td>
                 <td width="50%" class="result penaltycost" id="penaltycost">0</td>
             </tr>
             <tr>
-                <td class="counter panaltycounter">Penalty counter</td>
+                <td class="counter panaltycounter">Penalty counter:</td>
                 <td id="panaltycounter" class="result panaltycounter">0</td>
             </tr>
         </table>
@@ -4311,10 +4316,7 @@
 </div>
         <div id="teamname">TEAM NAME</div>
     </div>
-    <div class="box c">
-        <div id="graph_2"><!-- Plotly chart will be drawn inside this DIV --></div>
-    </div>
-</div>
-
+	</div>
+	
 </body>
 </html>
