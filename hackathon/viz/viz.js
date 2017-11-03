@@ -81,6 +81,7 @@ var overall_output;
 function vizResults(data) {
     var scale = 100;
 
+
     var price = data[data.length - 1].overall;
     $("#totalcost").html(Math.round(price * 100)/100);
 
@@ -96,6 +97,8 @@ function vizResults(data) {
 
     var grid_st = data[data.length - 1].DataMessage.grid_status
     $("#gridstatus").html(grid_st);
+
+//    var x_size = Array.apply(null, Array(data.length)).map(function (_, i) {return i;});
 
     // data for the graph 1
     var total_cost = []
@@ -199,15 +202,34 @@ function vizResults(data) {
     var g2_plot_data = [cp_bess_power, cp_main_grid_power, cp_real_load, cp_pv_power, cp_grid_status, cp_bess_soc];
 
     var cp_layout = {
-      //title: 'Double Y Axis Example',
-      //yaxis: {title: 'yaxis title'},
-      yaxis2: {
-        //title: 'yaxis2 title',
-        titlefont: {color: 'rgb(148, 103, 189)'},
-        tickfont: {color: 'rgb(148, 103, 189)'},
-        overlaying: 'y',
-        side: 'right'
-      }
+        legend: {"orientation": "h"},
+        height: 300,
+        margin: {
+            l: 50,
+            r: 30,
+            b: 30,
+            t: 30,
+            pad: 3
+        },
+        xaxis: {
+            showgrid: true,
+            zeroline: false,
+            showline: true,
+            tickangle: 10,
+        },
+        yaxis: {
+            tickangle: 10,
+            showline: true,
+            showgrid: true,
+            zeroline: false,
+        },
+        yaxis2: {
+            tickangle: 10,
+            showline: true,
+            showgrid: true,
+            overlaying: 'y',
+            side: 'right'
+        }
     };
 
     Plotly.newPlot('graph_1', g1_plot_data, cp_layout);
