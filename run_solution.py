@@ -6,6 +6,7 @@ be provided by contestants
 
 import sys
 from hackathon.solution.solution import run
+from hackathon.framework.http_server import prepare_dot_dir
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."

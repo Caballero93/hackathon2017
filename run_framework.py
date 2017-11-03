@@ -5,6 +5,7 @@ import sys
 import os
 from hackathon.framework.framework import run
 from hackathon.utils.utils import TYPHOON_DIR
+from hackathon.framework.http_server import prepare_dot_dir
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
