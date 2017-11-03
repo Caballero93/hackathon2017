@@ -38,9 +38,8 @@ def main_grid(on: bool,
         return real_load - s_prod
 
 def energy_mark(consumption: float,
-                penal: float,
                 bess_sell: float) -> float:
-    return consumption + penal - bess_sell
+    return consumption - bess_sell
 
 def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
@@ -143,7 +142,10 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     if soc_bess > 1:
         soc_bess = 1
 
-    em = energy_mark(consumption, penal, bess_sell)
+    TARGET_1MS_PRICE = 100 # targeted daily price for 1ms avg spent time
+    performance_mark = (spent_time*1000) * (24/(TARGET_1MS_PRICE*CFG.sampleRate))
+
+    em = energy_mark(consumption, bess_sell)
     pv_power = d.solar_production if r.pv_mode == PVMode.ON else 0
-    return em, 1, mg, penal, r_load, pv_power, soc_bess, \
+    return em, performance_mark, mg, penal, r_load, pv_power, soc_bess, \
         overload, current_power

@@ -13,6 +13,9 @@ with open(CFG.results) as json_data:
     d = json.load(json_data)
 
 overall = []
+overall_energy = []
+overall_penalty = []
+overall_performance = []
 energyMark = []
 performance = []
 bessSOC = []
@@ -27,6 +30,9 @@ pv_power = []
 
 for data_point in d:
     overall.append(data_point['overall'])
+    overall_energy.append(data_point['overall_energy'])
+    overall_penalty.append(data_point['overall_penalty'])
+    overall_performance.append(data_point['overall_performance'])
     energyMark.append(data_point['energyMark'])
     performance.append(data_point['performance'])
     bessSOC.append(data_point['bessSOC'])
@@ -45,20 +51,19 @@ t = np.arange(0., time_span, 1./CFG.sampleRate)
 
 fig, ax = plt.subplots(3, sharex=True)
 ax[0].step(t, overall, picker=True)
-ax[0].step(t, energyMark)
-ax[0].step(t, performance)
-ax[0].step(t, real_load)
-ax[0].step(t, pv_power)
+ax[0].step(t, overall_energy)
+ax[0].step(t, overall_penalty)
+ax[0].step(t, overall_performance)
 ax[0].set_title('Results')
-ax[0].legend(['Overall', 'Energy mark', 'Performance', 'Real load', 'PV power'], loc = 'upper right', fontsize = 'small')
+ax[0].legend(['Overall cost', 'Energy cost', 'Penalty cost', 'Computational cost'], loc = 'upper right', fontsize = 'small')
 ax[1].step(t, bessSOC)
 ax[1].step(t, bessOverload)
 ax[1].legend(['BESS SOC', 'BESS overload'], loc = 'upper right', fontsize = 'small')
 ax[2].step(t, bessPower)
 ax[2].step(t, mainGridPower)
-ax[2].step(t, current_load)
-ax[2].step(t, solar_production)
-ax[2].legend(['BESS power', 'Grid power', 'Total load', 'Solar power'], loc = 'upper right', fontsize = 'small')
+ax[2].step(t, real_load)
+ax[2].step(t, pv_power)
+ax[2].legend(['BESS power', 'Grid power', 'Total load', 'PV power'], loc = 'upper right', fontsize = 'small')
 
 plt.xlim(0, time_span)
 

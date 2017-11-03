@@ -215,7 +215,7 @@ class Config:
 # Unique configuration object that should be used everywhere
 CFG = Config()
 
-def write_a_result(energy_mark: float, performance: float,
+def write_a_result(energy_mark: float, performance_mark: float,
                    mg: float, penal: float, r_load: float, pv_power: float,
                    soc_bess: float, overload: bool, current_power: float,
                    data_msg: DataMessage) \
@@ -228,13 +228,17 @@ def write_a_result(energy_mark: float, performance: float,
             current = pickle.load(f)
 
     with open(CFG.results_dump, 'wb') as f:
-        current_mark = energy_mark + performance
+        current_mark = energy_mark + performance_mark + penal
         last = current[-1]['overall'] if current else 0
         last_energy = current[-1]['overall_energy'] if current else 0
+        last_penalty = current[-1]['overall_penalty'] if current else 0
+        last_performance = current[-1]['overall_performance'] if current else 0
         current.append({'overall': last + current_mark,
                         'overall_energy': last_energy + energy_mark,
+                        'overall_penalty': last_penalty + penal,
+                        'overall_performance': last_performance + performance_mark,
                         'energyMark': energy_mark,
-                        'performance': performance,
+                        'performance': performance_mark,
                         'real_load': r_load,
                         'pv_power': pv_power,
                         'bessSOC': soc_bess,
