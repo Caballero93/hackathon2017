@@ -12,6 +12,4 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 if __name__ == '__main__':
-    prepare_dot_dir()
-
     run(sys.argv)

@@ -11,8 +11,6 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 if __name__ == '__main__':
-    prepare_dot_dir()
-
     import generate_profiles
 
     run(sys.argv)

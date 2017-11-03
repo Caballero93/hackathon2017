@@ -3,6 +3,7 @@
 from hackathon.utils.control import Control
 from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
     TYPHOON_DIR, config_outs
+from hackathon.framework.http_server import prepare_dot_dir
 
 def worker(msg: DataMessage) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
@@ -16,7 +17,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           pv_mode=PVMode.ON)
 
 def run(args) -> None:
+    prepare_dot_dir()
     config_outs(args, 'solution')
+
 
     cntrl = Control()
 
