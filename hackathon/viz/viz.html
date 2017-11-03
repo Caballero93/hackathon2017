@@ -109,10 +109,11 @@
         </table>
         <div class="refresh">
             <form id="refreshRateForm">
+                <input type="hidden" name="action" id="action" />
                 <input id="refreshRate" type="number"/><br />
-                <input type="submit" value="Set refresh rate"/>
-                <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
-          </form>
+                <input type="submit" value="Set refresh rate" name="set" onclick="setAction('set')"/>
+                <input type="submit" value="Stop refreshing" name="stop" onclick="setAction('stop')"/>
+            </form>
             <label id="refreshIndicator"></label>
       </div>
       <div class="hackathon_logo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
