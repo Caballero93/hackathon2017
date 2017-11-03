@@ -8,11 +8,11 @@ __license__ = "MIT"
 
 PROFILE_PREFIX = "./data/profiles"
 LOAD_SCALES = [1.0, 1.1, 0.8, 1.2, 0.9]
-SOLAR_SCALES = [1.3, 0.7, 0.8, 0.9, 1.1]
-BLACKOUTS = [ [[11,11.5]], \
+SOLAR_SCALES = [1.3, 0.4, 0.8, 0.9, 1.1]
+BLACKOUTS = [ [[11,11.75]], \
               [], \
-              [], \
-              [], \
+              [[2.5,3]], \
+              [[20,21]], \
               [], ]
 
 PROFILES = []
