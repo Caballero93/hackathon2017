@@ -71,23 +71,11 @@ def run(args) -> None:
     with open(CFG.results_dump, 'w'):
         pass
 
-    # Load existing profile or create an ideal one if there is no
-    # profile file
-    if os.path.exists(CFG.profile_file):
-        with open(CFG.profile_file, 'r') as f:
-            profile = json.load(f)
+    # Open profile file
+    with open(CFG.profile_file, 'r') as f:
+        profile = json.load(f)
 
-        if CFG.DBG:
-            print('Profile file from {} has loaded...'
-                  .format(CFG.profile_file))
-    else:
-        with open(CFG.profile_file, 'w') as f:
-            to_write, profile = gen_profile(CFG.samples_num)
-            f.write(to_write)
-
-        if CFG.DBG:
-            print('Ideal profile file has generated at {}'
-                  .format(CFG.profile_file))
+    print('Profile file from {} has loaded...'.format(CFG.profile_file))
 
     print('Loading physics initialization file')
     with open(CFG.physics_init, 'r') as f:
@@ -98,13 +86,14 @@ def run(args) -> None:
           .format(lapse_time))
     time.sleep(lapse_time)
 
+    print('D: {}'.format(len(profile)))
     for i, rec in enumerate(profile):
         if i == 0:
             soc_bess, overload, current_power = ini['bessSOC'],      \
                                                 ini['bessOverload'], \
                                                 ini['bessPower']
         else:
-            last = read_results()[-1]
+            last = get_latest_result()
             soc_bess, overload, current_power = last['bessSOC'],      \
                                                 last['bessOverload'], \
                                                 last['bessPower']

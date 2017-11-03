@@ -19,6 +19,7 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 TYPHOON_DIR = '.typhoon'
+LATEST_RESULT = None
 
 class DataMessage:
     """Message that is sent by the framework to the solution."""
@@ -231,19 +232,27 @@ def write_a_result(energy_mark: float, performance: float,
         current_mark = energy_mark + performance
         last = current[-1]['overall'] if current else 0
         last_energy = current[-1]['overall_energy'] if current else 0
-        current.append({'overall': last + current_mark,
-                        'overall_energy': last_energy + energy_mark,
-                        'energyMark': energy_mark,
-                        'performance': performance,
-                        'real_load': r_load,
-                        'pv_power': pv_power,
-                        'bessSOC': soc_bess,
-                        'bessOverload': overload,
-                        'bessPower': current_power,
-                        'mainGridPower': mg,
-                        'penal': penal,
-                        'DataMessage': data_msg.__dict__})
+        new = {'overall': last + current_mark,
+               'overall_energy': last_energy + energy_mark,
+               'energyMark': energy_mark,
+               'performance': performance,
+               'real_load': r_load,
+               'pv_power': pv_power,
+               'bessSOC': soc_bess,
+               'bessOverload': overload,
+               'bessPower': current_power,
+               'mainGridPower': mg,
+               'penal': penal,
+               'DataMessage': data_msg.__dict__}
+        current.append(new)
         pickle.dump(current, f)
+        global LATEST_RESULT
+        LATEST_RESULT = new
+
+def get_latest_result() -> Any:
+    """Returns latest result that is written to output file."""
+    global LATEST_RESULT
+    return LATEST_RESULT
 
 def read_results() -> Optional[List[Any]]:
     """Load results python object from dump file. If file is still open
