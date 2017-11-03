@@ -34,7 +34,7 @@ def current_load(t: float, load_scaling=1.0, load_scaling_prev=1.0) -> float:
         return (load_scaling * 1.5) * (cos(1/5 * pi * (t - 8)) + 1) + 2
     elif 13 <= t <= 24:
         return (load_scaling * 3) * (cos(1/7 * pi * (t - 20)) + 1) + 2
-    elif 0 <= t <3:
+    elif 0 <= t < 3:
         return (load_scaling_prev * 3) * (cos(1/7 * pi * (t + 4)) + 1) + 2
     else:
         raise Exception('Time should be between 0 and 24')
