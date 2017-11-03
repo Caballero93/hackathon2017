@@ -53,8 +53,8 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
               .format(CFG.max_results_wait))
 
 def run(args) -> None:
-    config_outs(args, 'framework')
     prepare_dot_dir()
+    config_outs(args, 'framework')
 
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
     result_gather_socket, _ = bind_sub_socket(CFG.out_address, CFG.out_port)

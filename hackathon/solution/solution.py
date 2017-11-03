@@ -17,8 +17,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                           pv_mode=PVMode.ON)
 
 def run(args) -> None:
-    config_outs(args, 'solution')
     prepare_dot_dir()
+    config_outs(args, 'solution')
+
 
     cntrl = Control()
 
