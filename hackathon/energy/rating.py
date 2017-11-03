@@ -50,11 +50,13 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     global penal_l1_cnt
     global penal_l2_cnt
 
+    BESS_MAX_POWER = 6
+
     penal = 0.0
-    if r.power_reference > 8:
-        r.power_reference = 8
-    elif r.power_reference < -8:
-        r.power_reference = -8
+    if r.power_reference > BESS_MAX_POWER:
+        r.power_reference = BESS_MAX_POWER
+    elif r.power_reference < -BESS_MAX_POWER:
+        r.power_reference = -BESS_MAX_POWER
 
     if not r.load_one:
         if penal_l1_cnt == 0:
@@ -111,7 +113,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
 
         soc_bess = d.bessSOC - current_power / (CFG.sampleRate * 10)
 
-        if abs(current_power) > 8 or (soc_bess >= 1 and current_power < 0) \
+        if abs(current_power) > BESS_MAX_POWER or (soc_bess >= 1 and current_power < 0) \
            or (soc_bess <= 0 and current_power > 0):
             overload = True
             overload_cnt += 1
