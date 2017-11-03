@@ -130,6 +130,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             overload = False
             overload_cnt = 0
             soc_bess = d.bessSOC
+            r_load = 0
 
 
         consumption = 0
