@@ -24,10 +24,18 @@ form.inline {
 }
 .b {
 	width:100%;	
+	max-width:300px;
+}
+.header {
+  grid-column: 1;
+  grid-row: 1;
+  font-size:30px;
+  text-align:center;
+  margin-bottom:45px;
 }
 .a {
   grid-column: 1;
-  grid-row: 1;
+  grid-row: 2;
   min-height: 300px;
 }
 .b {
@@ -36,7 +44,7 @@ form.inline {
 }
 .c {
   grid-column: 1;
-  grid-row: 2 ;
+  grid-row: 3;
   min-height: 300px;
 }
 .d {
@@ -60,16 +68,12 @@ form.inline {
 	float:left;
 }
 .counters {
-    width:80%;
+    width:100%;
 }
 .counter,.result {
     font-size:16px;
     font-family:sans-serif;
 }
-td {
-    p
-}
-
 .refresh {
     float: right;
     padding-top: 10px;
@@ -135,4 +139,20 @@ input#refreshRate {
 #teamname {
 	position: relative;
 	top:50px;
+	text-align:center;
+	font-size:30px;
+}
+table.counters.electricity {
+    margin-bottom: 35px;
+}
+table.counters.electricity td {
+    font-size: 18px;
+}
+.hackathon_logo {
+	margin-top:15px;
+	transform: scale(0.8);
+	max-height:180px;
+}
+.hackathon_logo svg {
+	transform: scale(0.8);
 }
