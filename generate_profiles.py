@@ -6,7 +6,6 @@ __author__ = "Dusan Majstorovic"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
-PROFILE_PREFIX = "./data/profiles"
 LOAD_SCALES = [1.0, 1.1, 0.8, 1.2, 0.9]
 SOLAR_SCALES = [1.3, 0.4, 0.8, 0.9, 1.1]
 BLACKOUTS = [ [[11,11.75]], \
@@ -30,5 +29,7 @@ for i in CFG.days:
     PROFILES += profile
     LOAD_SCALING_PREV = LOAD_SCALES[n]
 
-with open(PROFILE_PREFIX + ".json", 'w') as f:
+with open(CFG.profile_file, 'w') as f:
     f.write(json.dumps(PROFILES))
+
+print('Profile is generated in {}'.format(CFG.profile_file))

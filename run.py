@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 """This module runs both contestant's solution and framework."""
 
-__author__ = "Novak Boskov"
-__copyright__ = "Typhoon HIL Inc."
-__license__ = "MIT"
-
 import webbrowser
 from multiprocessing import Process
 import run_solution as solution
 import run_framework as framework
 from hackathon.utils.utils import CFG
+
+__author__ = "Novak Boskov"
+__copyright__ = "Typhoon HIL Inc."
+__license__ = "MIT"
 
 if __name__ == '__main__':
     solution = Process(target=solution.run, args=('log', ))

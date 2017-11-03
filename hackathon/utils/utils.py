@@ -19,6 +19,7 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 TYPHOON_DIR = '.typhoon'
+LATEST_RESULT = None
 
 class DataMessage:
     """Message that is sent by the framework to the solution."""
@@ -233,21 +234,24 @@ def write_a_result(energy_mark: float, performance_mark: float,
         last_energy = current[-1]['overall_energy'] if current else 0
         last_penalty = current[-1]['overall_penalty'] if current else 0
         last_performance = current[-1]['overall_performance'] if current else 0
-        current.append({'overall': last + current_mark,
-                        'overall_energy': last_energy + energy_mark,
-                        'overall_penalty': last_penalty + penal,
-                        'overall_performance': last_performance + performance_mark,
-                        'energyMark': energy_mark,
-                        'performance': performance_mark,
-                        'real_load': r_load,
-                        'pv_power': pv_power,
-                        'bessSOC': soc_bess,
-                        'bessOverload': overload,
-                        'bessPower': current_power,
-                        'mainGridPower': mg,
-                        'penal': penal,
-                        'DataMessage': data_msg.__dict__})
+        new = {'overall': last + current_mark,
+               'overall_energy': last_energy + energy_mark,
+               'overall_penalty': last_penalty + penal,
+               'overall_performance': last_performance + performance_mark,
+               'energyMark': energy_mark,
+               'performance': performance_mark,
+               'real_load': r_load,
+               'pv_power': pv_power,
+               'bessSOC': soc_bess,
+               'bessOverload': overload,
+               'bessPower': current_power,
+               'mainGridPower': mg,
+               'penal': penal,
+               'DataMessage': data_msg.__dict__}
+        current.append(new)
         pickle.dump(current, f)
+        global LATEST_RESULT
+        LATEST_RESULT = new
 
 def read_results() -> Optional[List[Any]]:
     """Load results python object from dump file. If file is still open
