@@ -166,7 +166,10 @@ class Config:
             results('resultsHTTPServerPort')) # type: Optional[int]
         self.shutdown_http_server = safe_bool(
             results('shutdownHTTPServer')) # type: Optional[bool]
-        self.samples_num = safe_int(framework('samplesNum')) # type: Optional[int]
+        self.days = eval(framework('days'))
+        if not self.days:
+            self.days = range(1,6)
+        self.sampleRate = safe_int(framework('sampleRate'))  # type: Optional[int]
         self.framework_lapse_time = safe_int(
             framework('frameworkLapseTime')) # type: Optional[int]
         self.max_results_wait = safe_int(
@@ -261,6 +264,9 @@ def config_outs(args: List[str], log_name: str) -> None:
 
     """
     if len(args) > 1:
+        if not os.path.exists(TYPHOON_DIR):
+            os.mkdir(TYPHOON_DIR)
+
         sys.stdout = open(os.path.join(TYPHOON_DIR, '{}.log'
                                        .format(log_name)), 'w')
         sys.stderr = open(os.path.join(TYPHOON_DIR, '{}_err.log'

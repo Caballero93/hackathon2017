@@ -8,6 +8,7 @@ import run_framework as framework
 from hackathon.utils.utils import CFG
 
 if __name__ == '__main__':
+    import generate_profiles
     solution = Process(target=solution.run, args=('log', ))
     solution.start()
     framework = Process(target=framework.run, args=('log', ))

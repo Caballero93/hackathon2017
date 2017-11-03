@@ -3,12 +3,9 @@ import time
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.cm as cm
-import scipy.spatial as spatial
+from hackathon.utils.utils import *
 
-sample_rate = 60. # samples per hour
-
-with open('results.json') as json_data:
+with open(CFG.results) as json_data:
     d = json.load(json_data)
 
 overall = []
@@ -38,8 +35,9 @@ for data_point in d:
     real_load.append(data_point['real_load'])
     pv_power.append(data_point['pv_power'])
 
+time_span = len(overall) / CFG.sampleRate
 
-t = np.arange(0., 24., 1./sample_rate)
+t = np.arange(0., time_span, 1./CFG.sampleRate)
  
 fig, ax = plt.subplots(3, sharex=True)
 ax[0].step(t, overall, picker=True)
@@ -58,7 +56,7 @@ ax[2].step(t, current_load)
 ax[2].step(t, solar_production)
 ax[2].legend(['BESS power', 'Grid power', 'Total load', 'Solar power'], loc = 'upper right', fontsize = 'small')
 
-plt.xlim(0, 24)
+plt.xlim(0, time_span)
 
 formatter = matplotlib.ticker.FuncFormatter(lambda m, x: time.strftime('%H:%M', time.gmtime(m*60*60)))
 ax[2].xaxis.set_major_formatter(formatter)
