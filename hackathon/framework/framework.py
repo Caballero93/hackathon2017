@@ -92,20 +92,22 @@ def run(args) -> None:
     print('D: {}'.format(len(profile)))
     for i, rec in enumerate(profile):
         if i == 0:
-            soc_bess, overload, current_power = ini['bessSOC'],      \
+            soc_bess, overload, mg, current_power = ini['bessSOC'],      \
                                                 ini['bessOverload'], \
+                                                ini['mainGridPower'], \
                                                 ini['bessPower']
         else:
             last = get_latest_result()
-            soc_bess, overload, current_power = last['bessSOC'],      \
+            soc_bess, overload, mg, current_power = last['bessSOC'],      \
                                                 last['bessOverload'], \
+                                                last['mainGridPower'], \
                                                 last['bessPower']
 
         data = DataMessage(i,
                            rec['gridStatus'], rec['buyingPrice'],
                            rec['sellingPrice'], rec['currentLoad'],
                            rec['solarProduction'],
-                           soc_bess, overload, current_power)
+                           soc_bess, overload, mg, current_power)
 
         if CFG.DBG:
             print('Framework emits {}'.format(data))

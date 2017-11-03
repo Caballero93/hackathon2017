@@ -26,29 +26,40 @@ class DataMessage:
     """Message that is sent by the framework to the solution."""
     def __init__(self, id,
                  grid_status: bool,
+                 # True or False, depending on the grid being available or not, in each moment
                  buying_price: float,
+                 # The price of the energy from the grid, in each moment in time
                  selling_price: float,
-                 current_load: float,
+                 # The price of the energy being "sold" to the grid, in each moment in time
+                 current_max_load: float,
+                 # Maximum theoretical power of all the loads, in each moment in time
                  solar_production: float,
+                 # Theoretical power available from the solar panel
                  bessSOC: float,
+                 # State Of Charge od the battery energy storage system
                  bessOverload: bool,
-                 mainGridPower: float) -> None:
+                 # True or False, depending on whether the battery is overloaded, or not
+                 mainGridPower: float,
+                 # Power of the energy taken from, or "returned" to the grid (therefore, might be negative)
+                 bessPower: float) -> None:
+                 # Power of the energy taken from, or "returned" to the battery (positive when discharging)
         self.id = id
         self.grid_status = grid_status
         self.buying_price = buying_price
         self.selling_price = selling_price
-        self.current_load = current_load
+        self.current_load = current_max_load
         self.solar_production = solar_production
         self.bessSOC = bessSOC
         self.bessOverload = bessOverload
         self.mainGridPower = mainGridPower
+        self.bessPower = bessPower
 
     def __str__(self):
         return "{}, {}, {}, {}, {}, {}, {}, {}, {}" \
             .format(self.id, self.grid_status, self.buying_price,
                     self.selling_price, self.current_load,
                     self.solar_production, self.bessSOC,
-                    self.bessOverload, self.mainGridPower)
+                    self.bessOverload, self.mainGridPower, self.bessPower)
 
 
 class PVMode(Enum):
@@ -61,10 +72,15 @@ class ResultsMessage:
     """Message that is sent back to the framework by the solution."""
     def __init__(self, data_msg: DataMessage,
                  load_one: bool,
+                 # True or False, depending on whether the first load is on or off
                  load_two: bool,
+                 # True or False, depending on whether the second load is on or off
                  load_three: bool,
+                 # True or False, depending on whether the third load is on or off
                  power_reference: float,
+                 # Describing how much power should the battery be using (positive when discharging)
                  pv_mode: PVMode) -> None:
+                 # True or False, depending on whether the solar panel is being used or not
         self.data_msg = data_msg
         self.load_one = load_one
         self.load_two = load_two
