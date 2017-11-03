@@ -45,17 +45,17 @@
             </tr>
         </table>
         <div class="refresh">
-            <form id="refreshRateForm" class="inline">
+            <form id="refreshRateForm">
                 <input id="refreshRate" type="number"/>
                 <input type="submit" value="Set refresh rate"/>
+                <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
             </form>
-            <button onclick='setPageRefresh("stop")'>Stop refreshing</button>
-        </div>
-        <div class="refresh">
             <label id="refreshIndicator"></label>
         </div>
     </div>
-    <div id="graph_2"><!-- Plotly chart will be drawn inside this DIV --></div>
+    <div class="box c">
+        <div id="graph_2"><!-- Plotly chart will be drawn inside this DIV --></div>
+    </div>
 </div>
 
 </body>
