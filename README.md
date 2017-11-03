@@ -1,12 +1,7 @@
 # Python hackathon
-This documents contains description of the challenge, its explanation
-as well as referent software implementation.
+This documents contains basic explanation of implementation part.
 
-# Modeling the challenge
-
-# Explain the challenge
-
-# Solve the challenge --- the implementation part
+# Solve the challenge
 Firstly, clone this project:
 
 ``` shell
@@ -64,13 +59,13 @@ solution architecture.**
 Typhoon framework is given as a Python script that could be run using:
 
 ``` shell
-./framework.py
+./run_framework.py
 ```
 
 Or:
 
 ``` shell
-ptyhon framework.py
+ptyhon run_framework.py
 ```
 
 Framework starts emitting data in the form of `DataMessage`
@@ -85,15 +80,26 @@ that produces data sent by the framework encapsulated into
 `DataMessage` objects. Second is aimed to send data back to the
 Typhoon framework when it is ready, data that is sent should be
 encapsulated into `ResultsMessage` object. Proposed solution that
-depicts usage of the `Control` class is given below:
+depicts usage of the `Control` class is given below
+(`hackathon/solution/solution.py`):
 
 ``` python
 def worker(msg: DataMessage) -> ResultsMessage:
-    print('Worker doing its job, message is {} ...' \
-          .format(msg))
-    return ResultsMessage(msg, 0, 0, 0)
+    """TODO: This function should be implemented by contestants."""
 
-if __name__ == '__main__':
+    # Dummy result is returned in every cycle here
+    return ResultsMessage(data_msg=msg,
+                          load_one=True,
+                          load_two=True,
+                          load_three=True,
+                          power_reference=0.0,
+                          pv_mode=PVMode.ON)
+
+
+def run(args) -> None:
+    prepare_dot_dir()
+    config_outs(args, 'solution')
+
     cntrl = Control()
 
     for data in cntrl.get_data():
