@@ -267,14 +267,16 @@ def read_results() -> Optional[List[Any]]:
         except:
             time.sleep(0.01)
 
+def get_latest_result() -> Any:
+    """Returns latest result that is written to output file."""
+    global LATEST_RESULT
+    return LATEST_RESULT
+
 def config_outs(args: List[str], log_name: str) -> None:
     """If run is called with command line args then log outputs to files.
 
     """
     if len(args) > 1:
-        if not os.path.exists(TYPHOON_DIR):
-            os.mkdir(TYPHOON_DIR)
-
         sys.stdout = open(os.path.join(TYPHOON_DIR, '{}.log'
                                        .format(log_name)), 'w')
         sys.stderr = open(os.path.join(TYPHOON_DIR, '{}_err.log'
