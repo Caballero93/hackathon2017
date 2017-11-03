@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from hackathon.utils.utils import *
 
+__author__ = "Dusan Majstorovic"
+__copyright__ = "Typhoon HIL Inc."
+__license__ = "MIT"
+
 with open(CFG.profile_file) as json_data:
     d = json.load(json_data)
 
@@ -13,19 +17,19 @@ buyingPrice = []
 sellingPrice = []
 currentLoad = []
 solarProduction = []
-    
+
 for data_point in d:
     gridStatus.append(data_point['gridStatus'])
     buyingPrice.append(data_point['buyingPrice'])
     sellingPrice.append(data_point['sellingPrice'])
     currentLoad.append(data_point['currentLoad'])
     solarProduction.append(data_point['solarProduction'])
-    
+
 
 time_span = len(gridStatus) / CFG.sampleRate
 
 t = np.arange(0., time_span, 1./CFG.sampleRate)
- 
+
 fig, ax = plt.subplots(3, sharex=True)
 ax[0].step(t,gridStatus)
 ax[0].set_title('Profiles')

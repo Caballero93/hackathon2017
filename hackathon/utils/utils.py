@@ -166,10 +166,10 @@ class Config:
             results('resultsHTTPServerPort')) # type: Optional[int]
         self.shutdown_http_server = safe_bool(
             results('shutdownHTTPServer')) # type: Optional[bool]
-        self.days = eval(framework('days'))
-        if not self.days:
-            self.days = range(1,6)
-        self.sampleRate = safe_int(framework('sampleRate'))  # type: Optional[int]
+        self.days = safe_int(
+            framework('days')) or range(1,6) # type List[int]
+        self.sampleRate = safe_int(
+            framework('sampleRate'))  # type: Optional[int]
         self.framework_lapse_time = safe_int(
             framework('frameworkLapseTime')) # type: Optional[int]
         self.max_results_wait = safe_int(
