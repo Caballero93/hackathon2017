@@ -127,9 +127,10 @@ function vizResults(data) {
 
         real_load.push(curr.real_load);
         pv_power.push(curr.pv_power);
-        bess_power.push(curr.bess_power);
+        bess_power.push(curr.bessPower);
+        main_grid_power.push(curr.mainGridPower)
         grid_status.push(curr.DataMessage.grid_status);
-        bess_soc.push(curr.bess_soc);
+        bess_soc.push(curr.bessSOC);
 
     }
 
