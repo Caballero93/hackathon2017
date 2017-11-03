@@ -13,6 +13,7 @@ from hackathon.energy.rating import get_physics_metrics
 from hackathon.energy.energy_math import gen_profile
 from hackathon.framework.http_server import run as http_server_run
 from hackathon.framework.http_server import prepare_dot_dir
+import generate_profiles as gp
 
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
@@ -54,6 +55,7 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
 
 def run(args) -> None:
     prepare_dot_dir()
+    gp.generate_profiles()
     config_outs(args, 'framework')
 
     data_emit_socket, _ = bind_pub_socket(CFG.in_address, CFG.in_port)
