@@ -74,19 +74,11 @@ var overall_output;
 function vizResults(data) {
     var scale = 100;
 
-
     var price = data[data.length - 1].overall;
     $("#totalcost").html(Math.round(price * 100)/100 + ' $');
 
     var cost = data[data.length - 1].overall_energy;
     $("#energycost").html(Math.round(cost * 100)/100 + ' $');
-
-    var penalties = data.map(x => x.penal);
-    var penalty_cost = penalties.reduce((x, y) => x + y);
-    $("#penaltycost").html(Math.round(penalty_cost * 100)/100 + ' $');
-
-    var penalty_num = penalties.filter((x => x > 0))
-    $("#panaltycounter").html(penalty_num.length);
 
 //    var avg_runtime = data[data.length - 1].DataMessage.grid_status
 //    $("#avgruntime").html(avg_runtime);
@@ -96,39 +88,85 @@ function vizResults(data) {
 
 //    var x_size = Array.apply(null, Array(data.length)).map(function (_, i) {return i;});
 
+    // Penalties
+    var penalty_num = 0;
+
     // data for the graph 1
-    var total_cost = data.map(x => x.overall);
-    var total_performance = data.map(x => x.performance);
+    var overall_cost = [];
+    var energy_cost = [];
+    var penalty_cost = [];
+    var computation_cost = [];
 
     // data for the graph 2
-    var real_load = data.map(x => x.real_load);
-    var pv_power = data.map(x => x.pv_power);
-    var bess_power = data.map(x => x.bessPower);
-    var main_grid_power = data.map(x => x.mainGridPower);
-    var grid_status = data.map(x => x.DataMessage.grid_status);
-    var bess_soc = data.map(x => x.bessSOC);
+    var total_load =[];
+    var pv_power = [];
+    var bess_power = [];
+    var main_grid_power = [];
+    var grid_status = [];
+    var bess_soc = [];
+
+    for(var i = 0; i < data.length; i++){
+        // Calculate penalty data
+        var curr = data[i];
+        if(curr.penal > 0){
+            penalty_num += 1;
+        }
+
+        // Set graph data for graph 1
+        overall_cost.push(curr.overall)
+        energy_cost.push(curr.overall_energy)
+        penalty_cost.push(curr.overall_penalty)
+        computation_cost.push(curr.overall_performance)
+
+        // Set graph data for graph 2
+        total_load.push(curr.real_load);
+        pv_power.push(curr.pv_power);
+        bess_power.push(curr.bessPower);
+        main_grid_power.push(curr.mainGridPower)
+        grid_status.push(curr.DataMessage.grid_status);
+        bess_soc.push(curr.bessSOC);
+
+    }
+
+    // Update penalty info on the HTML
+    $("#penaltycost").html(Math.round(penalty_cost[penalty_cost.length -1 ] * 100)/100 + ' $');
+    $("#panaltycounter").html(penalty_num);
 
     // plots for the graph 1
-    var cp_cost = {
+    var cp_overall_cost = {
       //x: x_size,
-      y: total_cost,
-      name: 'Total Cost',
+      y: overall_cost,
+      name: 'Overall cost',
       type: 'scatter'
     };
 
-    var cp_perf = {
+    var cp_energy_cost = {
       //x: x_size,
-      y: total_performance,
-      name: 'Performance',
-      yaxis: 'y2',
+      y: energy_cost,
+      name: 'Energy cost',
       type: 'scatter'
     };
+
+    var cp_penalty_cost = {
+      //x: x_size,
+      y: penalty_cost,
+      name: 'Penalty cost',
+      type: 'scatter'
+    };
+
+    var cp_computation_cost = {
+      //x: x_size,
+      y: computation_cost,
+      name: 'Computational cost',
+      type: 'scatter'
+    };
+
 
     // plots for the graph 2
-    var cp_real_load = {
+    var cp_total_load = {
       //x: x_size,
-      y: real_load,
-      name: 'Real Load',
+      y: total_load,
+      name: 'Total Load',
       type: 'scatter'
     };
 
@@ -142,7 +180,7 @@ function vizResults(data) {
     var cp_bess_power = {
       //x: x_size,
       y: bess_power,
-      name: 'Bess Power',
+      name: 'BESS Power',
       type: 'scatter'
     };
 
@@ -169,15 +207,15 @@ function vizResults(data) {
       type: 'scatter'
     };
 
-    var g1_plot_data = [cp_cost, cp_perf];
-    var g2_plot_data = [cp_bess_power, cp_main_grid_power, cp_real_load, cp_pv_power, cp_grid_status, cp_bess_soc];
+    var g1_plot_data = [cp_overall_cost, cp_energy_cost, cp_penalty_cost, cp_computation_cost];
+    var g2_plot_data = [cp_bess_power, cp_main_grid_power, cp_total_load, cp_pv_power, cp_grid_status, cp_bess_soc];
 
-    var cp_layout = {
+    var cp_layout_graph1 = {
         legend: {"orientation": "h"},
         height: 300,
         margin: {
             l: 50,
-            r: 30,
+            r: 50,
             b: 30,
             t: 30,
             pad: 3
@@ -186,7 +224,31 @@ function vizResults(data) {
             showgrid: true,
             zeroline: false,
             showline: true,
+            tickangle: 5,
+        },
+        yaxis: {
             tickangle: 10,
+            showline: true,
+            showgrid: true,
+            zeroline: false,
+        },
+    };
+
+    var cp_layout_graph2 = {
+        legend: {"orientation": "h"},
+        height: 300,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 30,
+            t: 30,
+            pad: 3
+        },
+        xaxis: {
+            showgrid: true,
+            zeroline: false,
+            showline: true,
+            tickangle: 5,
         },
         yaxis: {
             tickangle: 10,
@@ -203,8 +265,8 @@ function vizResults(data) {
         }
     };
 
-    Plotly.newPlot('graph_1', g1_plot_data, cp_layout);
-    Plotly.newPlot('graph_2', g2_plot_data, cp_layout);
+    Plotly.newPlot('graph_1', g1_plot_data, cp_layout_graph1);
+    Plotly.newPlot('graph_2', g2_plot_data, cp_layout_graph2);
 
 }
 
