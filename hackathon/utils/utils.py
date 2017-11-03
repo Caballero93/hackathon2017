@@ -53,8 +53,8 @@ class DataMessage:
 
 class PVMode(Enum):
     """Photo-voltaic panel working mode."""
-    OFF = 0;
-    ON = 1;
+    OFF = 0
+    ON = 1
 
 
 class ResultsMessage:
