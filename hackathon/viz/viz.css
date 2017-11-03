@@ -9,10 +9,10 @@ form.inline {
 }
 
 .wrapper {
-	margin-top:90px;
+	margin-top:105px;
 }
 .wrapper.left{
-	width:75%;
+	width:74%;
 	background-color:#f8f8f8;
 	float:left;
 	height:100%;
@@ -25,6 +25,9 @@ form.inline {
 .box {
   border-radius: 5px;
   padding: 0px;
+}
+.box.b {
+	padding-top:35px;
 }
 .header {
   font-size:30px;
@@ -39,6 +42,7 @@ form.inline {
 	padding:10px;
 	background-color:#fff;
 	z-index: 1000000000;
+	margin-top:22px;
 }
 .one-third.column {
 	width:33.3%;
@@ -85,7 +89,7 @@ span.logo {
     font-size: 30px;
 }
 #header table.counters td {
-	font-size:20px;
+	font-size:26px;
 }
 #header table.counters {
 	position: relative;
@@ -110,6 +114,8 @@ form#refreshRateForm input[type=submit]:hover, #refreshRateForm button:hover {
 }
 input#refreshRate {
     margin-bottom: 10px;
+	width:40px;
+	padding:4px 0;
 }
 #refreshRateForm {
 	margin-bottom:10px;
@@ -117,7 +123,7 @@ input#refreshRate {
 #refreshIndicator {
     float: right;
     position: absolute;
-    top: 25px;
+    top: 12px;
     right: -35px;
 }
 #teamname {
@@ -134,10 +140,9 @@ table.counters.electricity td {
 }
 .hackathon_logo {
 	margin-top:15px;
-	transform: scale(0.8);
 	max-height:180px;
 	text-align:center;
 }
 .hackathon_logo svg {
-	transform: scale(0.8);
+	/*transform: scale(0.8);*/
 }
