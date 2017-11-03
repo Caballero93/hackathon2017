@@ -4,6 +4,10 @@ be provided by contestants
 
 """
 
+__author__ = "Novak Boskov"
+__copyright__ = "Typhoon HIL Inc."
+__license__ = "MIT"
+
 import sys
 from hackathon.solution.solution import run
 
