@@ -1,5 +1,5 @@
-body,svg,text,input,div,a, button {
-    font-family:Arial,Verdana,sans-serif;
+body,svg,text,input,div,a, button,table, td {
+    font-family:Helvetica,Arial,Verdana,sans-serif;
 }
 body {
   margin: 5px;
@@ -12,13 +12,19 @@ form.inline {
   display: grid;
   grid-gap: 5px;
   grid-template-columns: 80%, 20%;
+	margin-top:90px;
 }
 
 .box {
   border-radius: 5px;
   padding: 0px;
 }
-
+.a,.c {
+	width:85%;
+}
+.b {
+	width:100%;	
+}
 .a {
   grid-column: 1;
   grid-row: 1;
@@ -37,8 +43,24 @@ form.inline {
   grid-column: 1;
   grid-row: 3 ;
 }
+#header {
+	position:fixed;
+	top:0;
+	width:100%;
+	padding:10px;
+	background-color:#fff;
+	z-index: 1000000000;
+}
+.one-third.column {
+	width:33.3%;
+	float:left;	
+}
+.two-thirds.column {
+	width:66.6%;
+	float:left;
+}
 .counters {
-    width:60%;
+    width:80%;
 }
 .counter,.result {
     font-size:16px;
@@ -51,6 +73,66 @@ td {
 .refresh {
     float: right;
     padding-top: 10px;
-    position: relative;
+    position: fixed;
     z-index: 100000000;
+	bottom:15px;
+	background-color:#fff;
+}
+.loader {
+    border: 2px solid #999; /* Light grey */
+    border-top: 2px solid #000; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+span.logo {
+	position: relative;
+    top: -28px;
+    font-size: 30px;
+}
+#header table.counters td {
+	font-size:20px;
+}
+#header table.counters {
+	position: relative;
+    top: 10px;
+}
+form#refreshRateForm input[type=submit], #refreshRateForm button {
+    background: transparent;
+    border-color: #5e91cc;
+    border-style: solid;
+    cursor: pointer;
+    padding: 5px;
+	color: #5e91cc;
+	border-width:1px;
+}
+form#refreshRateForm input[type=submit]:hover, #refreshRateForm button:hover {
+    background: #5e91cc;
+    border-color: #5e91cc;
+    border-style: solid;
+    cursor: pointer;
+    padding: 5px;
+	color:#fff;
+}
+input#refreshRate {
+    margin-bottom: 10px;
+}
+#refreshRateForm {
+	margin-bottom:10px;
+}
+#refreshIndicator {
+    float: right;
+    position: absolute;
+    top: 25px;
+    right: -35px;
+}
+#teamname {
+	position: relative;
+	top:50px;
 }
