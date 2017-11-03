@@ -54,12 +54,13 @@ function getResults() {
  * @param {Bool} stop - stop refreshing
  * @param {Bool} set - set refresh rate using refresh rate input field
  */
-function setPageRefresh(stopSet) {
-    if (stopSet == "stop") {
+function setPageRefresh() {
+    var action = $('#action').val()
+    if (action == "stop") {
         refreshRate = Infinity;
         $('#refreshRate').val(refreshRate);
         $('#refreshIndicator').html('');
-    } else if (stopSet == "set") {
+    } else if (action == "set") {
         refreshRate = parseInt($('#refreshRate').val());
         getResults();
     }
@@ -277,11 +278,15 @@ function vizResults(data) {
 function vizOnLoad() {
     $('#refreshRateForm').submit(event => {
         event.preventDefault();
-        setPageRefresh("set");
+        setPageRefresh();
     });
 
     getResults();
 
+}
+
+function setAction(action){
+    $('#action').val(action)
 }
 
 /*
