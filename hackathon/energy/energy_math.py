@@ -13,7 +13,7 @@ from typing import Optional, Tuple, List, Dict, Union
 
 def buying_price(t: float) -> Optional[float]:
     if t < 7 or 23 <= t <= 24:
-        return 2
+        return 3
     elif 7 <= t < 23:
         return 8
     else:
@@ -29,11 +29,11 @@ def selling_price(t: float) -> Optional[float]:
 
 def current_load(t: float) -> float:
     if 3 <= t < 13:
-        return (cos(1/5 * pi * (t - 8)) + 1) + 3
+        return 1.5 * (cos(1/5 * pi * (t - 8)) + 1) + 2
     elif 13 <= t <= 24:
-        return 2.5 * (cos(1/7 * pi * (t - 20)) + 1) + 3
+        return 3 * (cos(1/7 * pi * (t - 20)) + 1) + 2
     elif 0 <= t <3:
-        return 2.5 * (cos(1/7 * pi * (t + 4)) + 1) + 3
+        return 3 * (cos(1/7 * pi * (t + 4)) + 1) + 2
     else:
         raise Exception('Time should be between 0 and 24')
 
@@ -60,7 +60,7 @@ def gen_profile(samples_num: int, load_scaling=1.0, solar_scaling=1.0, blackouts
         gs = 1
         if blackouts:
             for blackout in blackouts:
-                if (s>=blackout[0]) and (s<=blackout[1]):
+                if blackout[0] <= t < blackout[1]:
                     gs = 0
         data.append({'gridStatus': gs,
                      'buyingPrice': buying_price(t),

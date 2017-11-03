@@ -2,9 +2,9 @@ from hackathon.energy.energy_math import gen_profile
 from hackathon.utils.utils import *
 
 PROFILE_PREFIX = "./data/profile_"
-LOAD_SCALES = [0.8, 1.1, 0.8, 1.2, 0.9]
+LOAD_SCALES = [1.0, 1.1, 0.8, 1.2, 0.9]
 SOLAR_SCALES = [1.3, 0.7, 0.8, 0.9, 1.1]
-BLACKOUTS = [ [[600,630]], \
+BLACKOUTS = [ [[11,11.5]], \
               [], \
               [], \
               [], \
