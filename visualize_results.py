@@ -23,6 +23,7 @@ bessOverload = []
 bessPower = []
 mainGridPower = []
 penal = []
+grid_status = []
 current_load = []
 solar_production = []
 real_load = []
@@ -40,6 +41,7 @@ for data_point in d:
     bessPower.append(data_point['bessPower'])
     mainGridPower.append(data_point['mainGridPower'])
     penal.append(data_point['penal'])
+    grid_status.append(data_point['DataMessage']['grid_status'])
     current_load.append(data_point['DataMessage']['current_load'])
     solar_production.append(data_point['DataMessage']['solar_production'])
     real_load.append(data_point['real_load'])
@@ -56,14 +58,15 @@ ax[0].step(t, overall_penalty)
 ax[0].step(t, overall_performance)
 ax[0].set_title('Results')
 ax[0].legend(['Overall cost', 'Energy cost', 'Penalty cost', 'Computational cost'], loc = 'upper right', fontsize = 'small')
+ax[1].step(t, grid_status)
 ax[1].step(t, bessSOC)
 ax[1].step(t, bessOverload)
-ax[1].legend(['BESS SOC', 'BESS overload'], loc = 'upper right', fontsize = 'small')
+ax[1].legend(['Grid status', 'BESS SOC', 'BESS overload'], loc = 'upper right', fontsize = 'small')
 ax[2].step(t, bessPower)
 ax[2].step(t, mainGridPower)
 ax[2].step(t, real_load)
 ax[2].step(t, pv_power)
-ax[2].legend(['BESS power', 'Grid power', 'Total load', 'PV power'], loc = 'upper right', fontsize = 'small')
+ax[2].legend(['BESS power', 'Main grid power', 'Total load', 'PV power'], loc = 'upper right', fontsize = 'small')
 
 plt.xlim(0, time_span)
 
