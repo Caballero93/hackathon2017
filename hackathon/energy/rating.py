@@ -5,8 +5,7 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 from typing import Tuple
-from hackathon.utils.utils import DataMessage, PVMode, ResultsMessage
-import math
+from hackathon.utils.utils import DataMessage, PVMode, ResultsMessage, CFG
 
 penal_l1_cnt = 0
 penal_l2_cnt = 0
@@ -90,15 +89,15 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                        d.solar_production, r.pv_mode)
         # we sell
         if mg < 0:
-            bess_sell = abs(mg) * d.selling_price / 60
+            bess_sell = abs(mg) * d.selling_price / CFG.sampleRate
             consumption = 0.0
         else:
-            consumption = mg * d.buying_price / 60
+            consumption = mg * d.buying_price / CFG.sampleRate
             bess_sell = 0
 
         current_power = r.power_reference
 
-        soc_bess = d.bessSOC - r.power_reference / 600
+        soc_bess = d.bessSOC - r.power_reference / (CFG.sampleRate * 10)
 
         overload = False
 
@@ -110,7 +109,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         current_power = main_grid(False, r_load, r.power_reference,
                                   d.solar_production, r.pv_mode)
 
-        soc_bess = d.bessSOC - current_power / 600
+        soc_bess = d.bessSOC - current_power / (CFG.sampleRate * 10)
 
         if abs(current_power) > 8 or (soc_bess >= 1 and current_power < 0) \
            or (soc_bess <= 0 and current_power > 0):
