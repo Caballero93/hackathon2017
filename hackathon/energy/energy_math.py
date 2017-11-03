@@ -27,35 +27,35 @@ def selling_price(t: float) -> Optional[float]:
     else:
         raise Exception('Time should be between 0 and 24')
 
-def current_load(t: float) -> float:
+def current_load(t: float, load_scaling=1.0, load_scaling_prev=1.0) -> float:
     if 3 <= t < 13:
-        return 1.5 * (cos(1/5 * pi * (t - 8)) + 1) + 2
+        return (load_scaling * 1.5) * (cos(1/5 * pi * (t - 8)) + 1) + 2
     elif 13 <= t <= 24:
-        return 3 * (cos(1/7 * pi * (t - 20)) + 1) + 2
+        return (load_scaling * 3) * (cos(1/7 * pi * (t - 20)) + 1) + 2
     elif 0 <= t <3:
-        return 3 * (cos(1/7 * pi * (t + 4)) + 1) + 2
+        return (load_scaling_prev * 3) * (cos(1/7 * pi * (t + 4)) + 1) + 2
     else:
         raise Exception('Time should be between 0 and 24')
 
-def solar_produciton(t: float) -> float:
+def solar_produciton(t: float, solar_scaling=1.0) -> float:
     if 7 <= t < 19:
-        return 2 * (cos(1/6 * pi * (t - 13)) + 1)
+        return (solar_scaling * 2) * (cos(1/6 * pi * (t - 13)) + 1)
     elif 0 <= t < 7 or 19 <= t <= 24:
         return 0
     else:
         raise Exception('Time should be between 0 and 24')
 
-def samples_to_time(samples_num: int, sample: int) -> float:
+def samples_to_time(sampleRate: int, sample: int) -> float:
     """Converts sample number to day time."""
-    return 24 / samples_num * sample
+    return sample / sampleRate
 
-def gen_profile(samples_num: int, load_scaling=1.0, solar_scaling=1.0, blackouts=[]) \
+def gen_profile(sampleRate: int, load_scaling=1.0, load_scaling_prev=1.0, solar_scaling=1.0, blackouts=[]) \
     -> Tuple[str, List[Dict[str, Union[float, bool]]]]:
     """Generates ideal profile."""
-    to_time = partial(samples_to_time, samples_num)
+    to_time = partial(samples_to_time, sampleRate)
     data = []
 
-    for s in range(samples_num):
+    for s in range(sampleRate*24):
         t = to_time(s)
         gs = 1
         if blackouts:
@@ -65,7 +65,7 @@ def gen_profile(samples_num: int, load_scaling=1.0, solar_scaling=1.0, blackouts
         data.append({'gridStatus': gs,
                      'buyingPrice': buying_price(t),
                      'sellingPrice': selling_price(t),
-                     'currentLoad': current_load(t)*load_scaling,
-                     'solarProduction': solar_produciton(t)*solar_scaling})
+                     'currentLoad': current_load(t, load_scaling, load_scaling_prev),
+                     'solarProduction': solar_produciton(t, solar_scaling)})
 
     return json.dumps(data), data
