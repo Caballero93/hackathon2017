@@ -2,7 +2,6 @@
 results to vizualizing web page.
 
 """
-
 __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
@@ -10,15 +9,17 @@ __license__ = "MIT"
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 from os.path import exists, join
-from os import makedirs, path, linesep
+from os import makedirs, path
 import sys
 import json
 from hackathon.utils.utils import CFG, TYPHOON_DIR, read_results
+
 
 def prepare_dot_dir():
     """Prepare .typhoon directory used to store server specific data."""
     if not exists(TYPHOON_DIR):
         makedirs(TYPHOON_DIR)
+
 
 class ResultsRequestHandler(BaseHTTPRequestHandler):
     """Simple HTTP request handler"""
@@ -46,6 +47,7 @@ class ResultsRequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(html, "utf8"))
             except FileNotFoundError:
                 self.send_error(404, 'File not found.')
+
 
 def run() -> None:
     prepare_dot_dir()

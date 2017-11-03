@@ -37,9 +37,11 @@ def main_grid(on: bool,
     else:
         return real_load - s_prod
 
+
 def energy_mark(consumption: float,
                 bess_sell: float) -> float:
     return consumption - bess_sell
+
 
 def get_physics_metrics(d: DataMessage, r: ResultsMessage,
                         spent_time: float, match: bool) \
@@ -101,8 +103,6 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
         soc_bess = d.bessSOC - r.power_reference / (CFG.sampleRate * 10)
 
         overload = False
-
-
     elif not d.grid_status:
         r_load = real_load(int(r.load_one), int(r.load_two),
                            int(r.load_three), d.current_load)
@@ -131,7 +131,6 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
             overload_cnt = 0
             soc_bess = d.bessSOC
             r_load = 0
-
 
         consumption = 0
         mg = 0
