@@ -12,6 +12,7 @@ __author__ = "Novak Boskov"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
+
 if __name__ == '__main__':
     prepare_dot_dir()
     solution = Process(target=solution.run, args=('log', ))

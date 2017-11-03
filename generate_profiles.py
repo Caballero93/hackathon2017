@@ -6,15 +6,16 @@ __author__ = "Dusan Majstorovic"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
-def generate_profiles():
 
+def generate_profiles():
     LOAD_SCALES = [1.0, 1.1, 0.8, 1.2, 0.9]
     SOLAR_SCALES = [1.3, 0.4, 0.8, 0.9, 1.1]
-    BLACKOUTS = [ [[11,11.75]], \
-                  [], \
-                  [[2.5,3]], \
-                  [[20,21]], \
-                  [], ]
+    BLACKOUTS = [[[11, 11.75]],
+                 [],
+                 [[2.5,3]],
+                 [[20,21]],
+                 [],
+                ]
 
     PROFILES = []
 
@@ -35,6 +36,7 @@ def generate_profiles():
         f.write(json.dumps(PROFILES))
 
     print('Profile is generated in {}'.format(CFG.profile_file))
+
 
 if __name__ == '__main__':
     generate_profiles()

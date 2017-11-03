@@ -20,11 +20,13 @@ PENAL_L2_CONT = 0.4
 
 PENAL_L3_CONT = 0.1
 
+
 def real_load(load_one: int,
               load_two: int,
               load_three: int,
               current_load: float) -> float:
     return (load_one * 0.2 + load_two * 0.5 + load_three * 0.3) * current_load
+
 
 def main_grid(on: bool,
               real_load: float,
@@ -62,7 +64,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     if not r.load_one:
         if penal_l1_cnt == 0:
             penal += PENAL_L1_INIT + PENAL_L1_CONT
-            penal_l1_cnt+=1
+            penal_l1_cnt += 1
         else:
             penal += PENAL_L1_CONT
     else:
@@ -141,7 +143,7 @@ def get_physics_metrics(d: DataMessage, r: ResultsMessage,
     if soc_bess > 1:
         soc_bess = 1
 
-    TARGET_1MS_PRICE = 100 # targeted daily price for 1ms avg spent time
+    TARGET_1MS_PRICE = 100  # targeted daily price for 1ms avg spent time
     performance_mark = (spent_time*1000) * (24/(TARGET_1MS_PRICE*CFG.sampleRate))
 
     em = energy_mark(consumption, bess_sell)

@@ -2,15 +2,12 @@
 testing and rating of solutions.
 
 """
-
-import time
 from multiprocessing import Process
-from typing import *
-import zmq
+
 import json
 from hackathon.utils.utils import *
 from hackathon.energy.rating import get_physics_metrics
-from hackathon.energy.energy_math import gen_profile
+
 from hackathon.framework.http_server import run as http_server_run
 from hackathon.framework.http_server import prepare_dot_dir
 import generate_profiles as gp
