@@ -1,6 +1,12 @@
 /**
    @author
+   Predrag Nikolic
+
+   @author
    Novak Boskov
+
+   @author
+   Alen Suljkanovic
 
    @copyright
    Typhoon HIL Inc.
@@ -15,6 +21,7 @@ refreshRate = 0.01;
 /**
  * GET solution's results from the server
  */
+
 function getResults() {
     $.ajax({
         url: SERVER_ADDRESS + ":" + SERVER_PORT + "/results",
@@ -80,12 +87,9 @@ function vizResults(data) {
     var cost = data[data.length - 1].overall_energy;
     $("#energycost").html(Math.round(cost * 100)/100);
 
-    var penalties = data.map(x => x.penal);
-    var penalty_cost = penalties.reduce((x, y) => x + y);
-    $("#penaltycost").html(Math.round(penalty_cost * 100)/100);
-
-    var penalty_num = penalties.filter((x => x > 0))
-    $("#panaltycounter").html(penalty_num.length);
+    // Penalties
+    var penalty_cost = 0;
+    var penalty_num = 0;
 
 //    var avg_runtime = data[data.length - 1].DataMessage.grid_status
 //    $("#avgruntime").html(avg_runtime);
@@ -94,16 +98,41 @@ function vizResults(data) {
     $("#gridstatus").html(grid_st);
 
     // data for the graph 1
-    var total_cost = data.map(x => x.overall);
-    var total_performance = data.map(x => x.performance);
+    var total_cost = []
+    var total_performance = []
 
     // data for the graph 2
-    var real_load = data.map(x => x.real_load);
-    var pv_power = data.map(x => x.pv_power);
-    var bess_power = data.map(x => x.bessPower);
-    var main_grid_power = data.map(x => x.mainGridPower);
-    var grid_status = data.map(x => x.DataMessage.grid_status);
-    var bess_soc = data.map(x => x.bessSOC);
+    var real_load =[];
+    var pv_power = [];
+    var bess_power = [];
+    var main_grid_power = [];
+    var grid_status = [];
+    var bess_soc = [];
+
+    for(var i = 0; i < data.length; i++){
+        // Calculate penalty data
+        var curr = data[i];
+        penalty_cost += curr.penal;
+
+        if(curr.penal > 0){
+            penalty_num += 1;
+        }
+
+        // Set graph data
+        total_cost.push(curr.overall);
+        total_performance.push(curr.performance);
+
+        real_load.push(curr.real_load);
+        pv_power.push(curr.pv_power);
+        bess_power.push(curr.bess_power);
+        grid_status.push(curr.DataMessage.grid_status);
+        bess_soc.push(curr.bess_soc);
+
+    }
+
+    // Update penalty info on the HTML
+    $("#penaltycost").html(Math.round(penalty_cost * 100)/100);
+    $("#panaltycounter").html(penalty_num.length);
 
     // plots for the graph 1
     var cp_cost = {
