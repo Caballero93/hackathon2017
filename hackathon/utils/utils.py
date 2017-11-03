@@ -21,6 +21,7 @@ __license__ = "MIT"
 TYPHOON_DIR = '.typhoon'
 LATEST_RESULT = None
 
+
 class DataMessage:
     """Message that is sent by the framework to the solution."""
     def __init__(self, id,
@@ -49,10 +50,12 @@ class DataMessage:
                     self.solar_production, self.bessSOC,
                     self.bessOverload, self.mainGridPower)
 
+
 class PVMode(Enum):
     """Photo-voltaic panel working mode."""
     OFF = 0;
     ON = 1;
+
 
 class ResultsMessage:
     """Message that is sent back to the framework by the solution."""
@@ -90,6 +93,7 @@ class ResultsMessage:
 
         return self
 
+
 def bind_sub_socket(address: str, port: int) -> \
     Optional[Tuple[zmq.Socket, zmq.Context]]:
     """Make subscribe socket and return pair of socket itself and its
@@ -109,6 +113,7 @@ def bind_sub_socket(address: str, port: int) -> \
         print(e)
         exit()
 
+
 def bind_pub_socket(address: str, port: int) -> \
     Optional[Tuple[zmq.Socket, zmq.Context]]:
     """Same as bind_sub_socket but for publish socket"""
@@ -123,17 +128,21 @@ def bind_pub_socket(address: str, port: int) -> \
         print(e)
         exit()
 
+
 def safe_int(s: str) -> Optional[int]:
     try:
         return int(s)
     except:
         return None
 
+
 def safe_bool(s: str) -> Optional[bool]:
     return True if s == 'True' else False
 
+
 def safe_path(s: str) -> Optional[str]:
     return os.path.join(*re.split('/|\\\\', s))
+
 
 class Config:
     """Class that represents configuration file.
@@ -213,8 +222,10 @@ class Config:
     def get_dump_name(results: str) -> str:
         return os.path.splitext(results)[0] + '.out'
 
+
 # Unique configuration object that should be used everywhere
 CFG = Config()
+
 
 def write_a_result(energy_mark: float, performance_mark: float,
                    mg: float, penal: float, r_load: float, pv_power: float,
@@ -253,6 +264,7 @@ def write_a_result(energy_mark: float, performance_mark: float,
         global LATEST_RESULT
         LATEST_RESULT = new
 
+
 def read_results() -> Optional[List[Any]]:
     """Load results python object from dump file. If file is still open
     wait for 10 milliseconds
@@ -267,10 +279,12 @@ def read_results() -> Optional[List[Any]]:
         except:
             time.sleep(0.01)
 
+
 def get_latest_result() -> Any:
     """Returns latest result that is written to output file."""
     global LATEST_RESULT
     return LATEST_RESULT
+
 
 def config_outs(args: List[str], log_name: str) -> None:
     """If run is called with command line args then log outputs to files.

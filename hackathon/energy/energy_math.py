@@ -6,10 +6,10 @@ __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
 import json
-from random import random
 from math import pi, cos
 from functools import partial
 from typing import Optional, Tuple, List, Dict, Union
+
 
 def buying_price(t: float) -> Optional[float]:
     if t < 7 or 23 <= t <= 24:
@@ -19,6 +19,7 @@ def buying_price(t: float) -> Optional[float]:
     else:
         raise Exception('Time should be between 0 and 24')
 
+
 def selling_price(t: float) -> Optional[float]:
     if 0 <= t < 11 or 17 <= t <= 24:
         return 3
@@ -26,6 +27,7 @@ def selling_price(t: float) -> Optional[float]:
         return 0
     else:
         raise Exception('Time should be between 0 and 24')
+
 
 def current_load(t: float, load_scaling=1.0, load_scaling_prev=1.0) -> float:
     if 3 <= t < 13:
@@ -37,6 +39,7 @@ def current_load(t: float, load_scaling=1.0, load_scaling_prev=1.0) -> float:
     else:
         raise Exception('Time should be between 0 and 24')
 
+
 def solar_produciton(t: float, solar_scaling=1.0) -> float:
     if 7 <= t < 19:
         return (solar_scaling * 2) * (cos(1/6 * pi * (t - 13)) + 1)
@@ -45,9 +48,11 @@ def solar_produciton(t: float, solar_scaling=1.0) -> float:
     else:
         raise Exception('Time should be between 0 and 24')
 
+
 def samples_to_time(sampleRate: int, sample: int) -> float:
     """Converts sample number to day time."""
     return sample / sampleRate
+
 
 def gen_profile(sampleRate: int, load_scaling=1.0,
                 load_scaling_prev=1.0, solar_scaling=1.0, blackouts=[]) \
