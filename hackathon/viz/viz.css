@@ -9,47 +9,28 @@ form.inline {
 }
 
 .wrapper {
-  display: grid;
-  grid-gap: 5px;
-  grid-template-columns: 80%, 20%;
 	margin-top:90px;
 }
-
+.wrapper.left{
+	width:75%;
+	background-color:#f8f8f8;
+	float:left;
+	height:100%;
+}
+.wrapper.right {
+	width: 24%;
+	padding-left:15px;
+	float:left;
+}
 .box {
   border-radius: 5px;
   padding: 0px;
 }
-.a,.c {
-	width:85%;
-}
-.b {
-	width:100%;	
-	max-width:300px;
-}
 .header {
-  grid-column: 1;
-  grid-row: 1;
   font-size:30px;
   text-align:center;
   margin-bottom:45px;
-}
-.a {
-  grid-column: 1;
-  grid-row: 2;
-  min-height: 300px;
-}
-.b {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-}
-.c {
-  grid-column: 1;
-  grid-row: 3;
-  min-height: 300px;
-}
-.d {
-  grid-column: 1;
-  grid-row: 3 ;
+  padding-top:20px;
 }
 #header {
 	position:fixed;
@@ -62,6 +43,9 @@ form.inline {
 .one-third.column {
 	width:33.3%;
 	float:left;	
+}
+.one-third.column table {
+	width:60%;
 }
 .two-thirds.column {
 	width:66.6%;
@@ -152,6 +136,7 @@ table.counters.electricity td {
 	margin-top:15px;
 	transform: scale(0.8);
 	max-height:180px;
+	text-align:center;
 }
 .hackathon_logo svg {
 	transform: scale(0.8);

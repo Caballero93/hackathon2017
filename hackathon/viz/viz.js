@@ -224,6 +224,8 @@ function vizResults(data) {
             showgrid: true,
             zeroline: false,
         },
+		paper_bgcolor: 'rgba(0,0,0,0)',
+		plot_bgcolor: 'rgba(0,0,0,0)'
     };
 
     var cp_layout_graph2 = {
@@ -254,7 +256,9 @@ function vizResults(data) {
             showgrid: true,
             overlaying: 'y',
             side: 'right'
-        }
+        },
+		paper_bgcolor: 'rgba(0,0,0,0)',
+		plot_bgcolor: 'rgba(0,0,0,0)'
     };
 
     Plotly.newPlot('graph_1', g1_plot_data, cp_layout_graph1);
