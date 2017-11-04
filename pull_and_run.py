@@ -4,6 +4,14 @@ import os
 import subprocess
 import shutil
 
+def rm_r(path: str) -> None:
+    for f in os.listdir(path):
+        f = os.path.join(path, f)
+        if os.path.isdir(f):
+            rm_r(f)
+        else:
+            os.remove(f)
+
 if __name__ == '__main__':
     theirs = 'hackathon2017.their'
     subprocess.run(['git', 'clone', sys.argv[1], theirs])
@@ -21,7 +29,7 @@ if __name__ == '__main__':
                     os.path.join('hackathon', 'solution'))
 
     # Remove their repository completely
-    shutil.rmtree(theirs)
+    rm_r(theirs)
 
     subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
 
