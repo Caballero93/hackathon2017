@@ -4,13 +4,7 @@ import os
 import subprocess
 import shutil
 
-def rm_r(path: str) -> None:
-    for f in os.listdir(path):
-        f = os.path.join(path, f)
-        if os.path.isdir(f):
-            rm_r(f)
-        else:
-            os.remove(f)
+
 
 if __name__ == '__main__':
     theirs = 'hackathon2017.their'
@@ -29,7 +23,10 @@ if __name__ == '__main__':
                     os.path.join('hackathon', 'solution'))
 
     # Remove their repository completely
-    rm_r(theirs)
+    if sys.platform.startswith('win'):
+        os.system('rmdir /S /Q "{}"'.format(theirs))
+    else:
+        shutil.rmtree(theirs)
 
     subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
 
