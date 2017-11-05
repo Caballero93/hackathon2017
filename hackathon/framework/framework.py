@@ -75,10 +75,10 @@ def run(args) -> None:
         pass
 
     # Open profile file
-    with open(CFG.profile_file, 'r') as f:
+    with open('./data/profiles_cmp.json', 'r') as f:
         profile = json.load(f)
 
-    print('Profile file from {} has loaded...'.format(CFG.profile_file))
+    print('Profile file from {} has loaded...'.format('./data/profiles_cmp.json'))
 
     print('Loading physics initialization file')
     with open(CFG.physics_init, 'r') as f:

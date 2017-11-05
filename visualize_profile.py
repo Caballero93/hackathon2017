@@ -9,7 +9,7 @@ __author__ = "Dusan Majstorovic"
 __copyright__ = "Typhoon HIL Inc."
 __license__ = "MIT"
 
-with open(CFG.profile_file) as json_data:
+with open('./data/profiles_cmp.json') as json_data:
     d = json.load(json_data)
 
 gridStatus = []
