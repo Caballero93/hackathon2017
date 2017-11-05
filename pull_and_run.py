@@ -4,8 +4,6 @@ import os
 import subprocess
 import shutil
 
-
-
 if __name__ == '__main__':
     theirs = 'hackathon2017.their'
     subprocess.run(['git', 'clone', sys.argv[1], theirs])
