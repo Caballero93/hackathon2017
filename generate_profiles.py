@@ -44,10 +44,10 @@ def generate_profiles():
         PROFILES += profile
         LOAD_SCALING_PREV = LOAD_SCALES[n]
 
-    with open(CFG.profile_file, 'w') as f:
+    with open('./data/profiles_cmp.json', 'w') as f:
         f.write(json.dumps(PROFILES))
 
-    print('Profile is generated in {}'.format(CFG.profile_file))
+    print('Profile is generated in {}'.format('./data/profiles_cmp.json'))
 
 
 if __name__ == '__main__':
