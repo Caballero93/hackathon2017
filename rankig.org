@@ -1,14 +1,14 @@
-| Name            | GIT | SCORE |
-|-----------------+-----+-------|
-| KoloTree https: |     |       |
-|  Tim404 https://
-|  AMiTeliHardware
-|  Cobra Team http
-|  ~tilda~ https:/
-|  Team TRV https:
-|  HilClimbers htt
-|  SyntaxError htt
-|  Bit Please http
-  PyLiman https:/
-  NoName https://
-  Code10 https://
+| Name            | SCORE |
+|-----------------+-------|
+| KoloTree        |     0 |
+| Tim404          |     0 |
+| AMiTeliHardware |     0 |
+| Cobra Team      |     0 |
+| ~tilda~         |     0 |
+| Team TRV        |     0 |
+| HilClimbers     |     0 |
+| SyntaxError     |     0 |
+| Bit Please      |     0 |
+| PyLiman         |     0 |
+| NoName          |     0 |
+| Code10          |     0 |
