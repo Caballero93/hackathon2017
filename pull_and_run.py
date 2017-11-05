@@ -20,6 +20,7 @@ import shutil
 
 if __name__ == '__main__':
     theirs = 'hackathon2017.their'
+    os.system('git reset --hard')
     subprocess.run(['git', 'clone', sys.argv[1], theirs])
 
     # Remove ours requirements file
