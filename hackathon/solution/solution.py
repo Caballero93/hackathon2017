@@ -6,13 +6,15 @@ from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
 from hackathon.framework.http_server import prepare_dot_dir
 from scipy.optimize import minimize
 
-
+global BESS_BELOW
+BESS_BELOW = False
 def worker(msg: DataMessage) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
-    BESS_BELOW = False
-
+    global BESS_BELOW
+    if msg.bessSOC >= 0.2:
+        BESS_BELOW = False
     def objective(x):
         return msg.buying_price * (msg.current_load - msg.solar_production - x[0])
 
@@ -44,8 +46,8 @@ def worker(msg: DataMessage) -> ResultsMessage:
             L3 = False
         if msg.bessSOC < 0.2:
             L2, L3 = False, False
-        if msg.solar_production > msg.current_load and msg.bessSOC != 1:
-            panel = PVMode.OFF
+        if msg.solar_production > msg.current_load and msg.bessSOC == 1:
+             panel = PVMode.OFF
 
     else:
         if msg.buying_price == 3:
@@ -63,8 +65,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 else:
                     p_bat = 0.0
                 print(sol.success)
+                print("===============================================================")
 
-
+    print(str(BESS_BELOW))
     print("Results message: ", L1, L2, L3, p_bat, panel)
 
     return ResultsMessage(data_msg=msg,
