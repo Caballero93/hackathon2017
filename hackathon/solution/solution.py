@@ -6,7 +6,7 @@ from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
 from hackathon.framework.http_server import prepare_dot_dir
 
 
-def worker(msg: DataMessage, L2_treshold: float) -> ResultsMessage:
+def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
@@ -31,7 +31,7 @@ def worker(msg: DataMessage, L2_treshold: float) -> ResultsMessage:
     else:
         if msg.buying_price==3:
             if msg.bessSOC!=1:
-                p_bat=-4.0
+                p_bat=-P_BATT
             else:
                 p_bat=0.0
         else:
@@ -44,18 +44,18 @@ def worker(msg: DataMessage, L2_treshold: float) -> ResultsMessage:
                 if( temp > 0):
                     p_bat=-temp
                 else:
-                    if temp > -4.0:
+                    if temp > -P_BATT:
                         p_bat=-temp
                     else:
-                        p_bat=4.0*msg.current_load/8
+                        p_bat=P_BATT*msg.current_load/9.6
             else:
                 if(temp > 0):
                     p_bat=0.0
                 else:
-                    if temp > -4.0:
+                    if temp > -P_BATT:
                         p_bat=-temp
                     else:
-                        p_bat=4.0*msg.current_load/8
+                        p_bat=P_BATT*msg.current_load/9.6
                 #p_bat=4.0
 
 
@@ -73,12 +73,12 @@ def worker(msg: DataMessage, L2_treshold: float) -> ResultsMessage:
                           pv_mode=panel)
 
 
-def run(log_file: str, L2_treshold: float) -> None:
+def run(log_file: str, L2_treshold: float, P_BATT) -> None:
     prepare_dot_dir()
     config_outs(log_file, 'solution')
 
     cntrl = Control()
-    # L2_treshold = 7.0
+    #L2_treshold = 7.0
 
     for data in cntrl.get_data():
-        cntrl.push_results(worker(data, L2_treshold))
+        cntrl.push_results(worker(data, L2_treshold, P_BATT))

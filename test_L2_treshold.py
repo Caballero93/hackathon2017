@@ -7,8 +7,8 @@ from hackathon.framework.http_server import prepare_dot_dir
 import json
 
 class Solution(object):
-    def __init__(self, L2_treshold):
-        self.p = Process(target=solution.run, args=('log', L2_treshold))
+    def __init__(self, L2_treshold, P_BATT):
+        self.p = Process(target=solution.run, args=('log', L2_treshold, P_BATT))
     def start(self):
         self.p.start()
 
@@ -33,26 +33,32 @@ class Framework(object):
 if __name__ == '__main__':
     prepare_dot_dir()
     L2_treshold = 6.0
+    P_BATT = 1.0
     results_list = []
     for i in range(2):
-        solution_process = Solution(L2_treshold)
-        solution_process.start()
-        framework_process = Framework()
-        framework_process.start()
+        P_BATT = 1.0
+        for j in range(2):
+            solution_process = Solution(L2_treshold, P_BATT)
+            solution_process.start()
+            framework_process = Framework()
+            framework_process.start()
 
-        webbrowser.open('http://localhost:{}/viz.html'
-                        .format(CFG.results_http_server_port))
-        solution_process.join()
-        framework_process.join()
-        solution_process.terminate()
-        framework_process.terminate()
-        with open('./data/results.json', 'r') as f:
-            data = json.load(f)
-        final_res = data[7199]['overall']
-        results_list.append((L2_treshold, final_res))
+            webbrowser.open('http://localhost:{}/viz.html'
+                            .format(CFG.results_http_server_port))
+            solution_process.join()
+            framework_process.join()
+            solution_process.terminate()
+            framework_process.terminate()
+            with open('./data/results.json', 'r') as f:
+                data = json.load(f)
+            final_res = data[7199]['overall']
+            results_list.append((L2_treshold, P_BATT, final_res))
+            P_BATT += 1.0
         L2_treshold += 0.5
 
     with open('test_L2_treshold.txt', 'a') as f:
-        f.write(str(results_list))
+        for el in results_list:
+            res = str(el) + '\n'
+            f.write(res)
 
 
