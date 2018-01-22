@@ -49,42 +49,48 @@ def worker(msg: DataMessage) -> ResultsMessage:
         if msg.solar_production > msg.current_load and msg.bessSOC > 0.99:
             panel = PVMode.OFF
     else:
-        # define decision variables
-        MILP_P_bat = LpVariable("MILP_P_bat", -6.0, 6.0, LpContinuous)
-        MILP_L1 = LpVariable("MILP_L1", 0, 1, LpBinary)
-        MILP_L2 = LpVariable("MILP_L2", 0, 1, LpBinary)
-        MILP_L3 = LpVariable("MILP_L3", 0, 1, LpBinary)
+        if msg.buying_price == 3:
+            if msg.bessSOC != 1:
+                p_bat = -6.0
+            else:
+                p_bat = 0.0
+        else:
+            # define decision variables
+            MILP_P_bat = LpVariable("MILP_P_bat", -6.0, 6.0, LpContinuous)
+            MILP_L1 = LpVariable("MILP_L1", 0, 1, LpBinary)
+            MILP_L2 = LpVariable("MILP_L2", 0, 1, LpBinary)
+            MILP_L3 = LpVariable("MILP_L3", 0, 1, LpBinary)
 
-        # define MILP problem
-        prob = LpProblem("Problem1", LpMinimize)
+            # define MILP problem
+            prob = LpProblem("Problem1", LpMinimize)
 
-        # add objective function first:
-        prob += price * (MILP_L1*LOAD_1 + MILP_L2*LOAD_2 + MILP_L3*LOAD_3 - P_pv - MILP_P_bat) \
-                + (1-MILP_L1) * PENAL_L1_CONT + (1-MILP_L2) * PENAL_L2_CONT + (1-MILP_L3) * PENAL_L3_CONT \
-                + L1_old * (1-MILP_L1) * PENAL_L1_INIT + L2_old * (1-MILP_L2) * PENAL_L2_INIT
+            # add objective function first:
+            prob += price * (MILP_L1*LOAD_1 + MILP_L2*LOAD_2 + MILP_L3*LOAD_3 - P_pv - MILP_P_bat) \
+                    + (1-MILP_L1) * PENAL_L1_CONT + (1-MILP_L2) * PENAL_L2_CONT + (1-MILP_L3) * PENAL_L3_CONT \
+                    + L1_old * (1-MILP_L1) * PENAL_L1_INIT + L2_old * (1-MILP_L2) * PENAL_L2_INIT
 
-        # add constraints:
-        prob += (1/600.0) * MILP_P_bat + msg.bessSOC <= 1.0
-        prob += (1/600.0) * MILP_P_bat + msg.bessSOC >= 0.2
+            # add constraints:
+            prob += (-1/600.0) * MILP_P_bat + msg.bessSOC <= 1.0
+            prob += (-1/600.0) * MILP_P_bat + msg.bessSOC >= 0.2
 
-        # solve the problem:
-        prob.solve()
+            # solve the problem:
+            prob.solve()
 
-        # print status:
-        print("========================================================")
-        print("Status: ", LpStatus[prob.status])
-        print("========================================================")
+            # print status:
+            print("========================================================")
+            print("Status: ", LpStatus[prob.status])
+            print("========================================================")
 
-        # assign values to control variables
-        for v in prob.variables():
-            if v.name == 'MILP_P_bat':
-                p_bat = v.varValue
-            elif v.name == 'MILP_L1':
-                L1 = bool(v.varValue)
-            elif v.name == 'MILP_L2':
-                L2 = bool(v.varValue)
-            elif v.name == 'MILP_L3':
-                L3 = bool(v.varValue)
+            # assign values to control variables
+            for v in prob.variables():
+                if v.name == 'MILP_P_bat':
+                    p_bat = v.varValue
+                elif v.name == 'MILP_L1':
+                    L1 = bool(v.varValue)
+                elif v.name == 'MILP_L2':
+                    L2 = bool(v.varValue)
+                elif v.name == 'MILP_L3':
+                    L3 = bool(v.varValue)
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print("Results message: ", L1, L2, L3, p_bat, panel)
