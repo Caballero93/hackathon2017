@@ -45,7 +45,7 @@ def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessag
                     p_bat=-temp
                 else:
                     if temp > -P_BATT:
-                        p_bat=-temp
+                        p_bat=-P_BATT
                     else:
                         p_bat=P_BATT*msg.current_load/9.6
             else:
