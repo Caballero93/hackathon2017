@@ -9,8 +9,9 @@ import json
 if __name__ == '__main__':
     prepare_dot_dir()
     L2_treshold = 7.0
+    P_BATT = 4.0
     results_list = []
-    solution = Process(target=solution.run, args=('log', L2_treshold))
+    solution = Process(target=solution.run, args=('log', L2_treshold, P_BATT))
     solution.start()
     framework = Process(target=framework.run, args=('log',))
     framework.start()

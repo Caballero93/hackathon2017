@@ -33,28 +33,29 @@ class Framework(object):
 if __name__ == '__main__':
     prepare_dot_dir()
     L2_treshold = 6.0
-    P_BATT = 1.0
     results_list = []
-    for i in range(2):
+    webbrowser.open('http://localhost:{}/viz.html'
+                    .format(CFG.results_http_server_port))
+    for i in range(11  ):
         P_BATT = 1.0
-        for j in range(2):
+        for j in range(11):
             solution_process = Solution(L2_treshold, P_BATT)
             solution_process.start()
             framework_process = Framework()
             framework_process.start()
 
-            webbrowser.open('http://localhost:{}/viz.html'
-                            .format(CFG.results_http_server_port))
             solution_process.join()
             framework_process.join()
             solution_process.terminate()
             framework_process.terminate()
+
             with open('./data/results.json', 'r') as f:
                 data = json.load(f)
             final_res = data[7199]['overall']
             results_list.append((L2_treshold, P_BATT, final_res))
-            P_BATT += 1.0
-        L2_treshold += 0.5
+            P_BATT += 0.5
+
+        L2_treshold += 0.1
 
     with open('test_L2_treshold.txt', 'a') as f:
         for el in results_list:
