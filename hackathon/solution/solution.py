@@ -45,9 +45,9 @@ def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessag
                     p_bat=-temp
                 else:
                     if temp > -P_BATT:
-                        p_bat=-P_BATT
+                        p_bat=-temp
                     else:
-                        p_bat=P_BATT*msg.current_load/9.6
+                        p_bat=P_BATT*msg.current_load/8
             else:
                 if(temp > 0):
                     p_bat=0.0
@@ -55,7 +55,7 @@ def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessag
                     if temp > -P_BATT:
                         p_bat=-temp
                     else:
-                        p_bat=P_BATT*msg.current_load/9.6
+                        p_bat=P_BATT*msg.current_load/8
                 #p_bat=4.0
 
 
@@ -78,7 +78,8 @@ def run(log_file: str, L2_treshold: float, P_BATT) -> None:
     config_outs(log_file, 'solution')
 
     cntrl = Control()
-    #L2_treshold = 7.0
+    #L2_treshold = 6.5
+    #P_BATT = 4.0
 
     for data in cntrl.get_data():
         cntrl.push_results(worker(data, L2_treshold, P_BATT))

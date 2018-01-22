@@ -15,8 +15,9 @@ __license__ = "MIT"
 
 if __name__ == '__main__':
     prepare_dot_dir()
-    L2_treshold = 7.0
-    solution = Process(target=solution.run, args=('log', L2_treshold))
+    L2_treshold = 6.5
+    P_BATT = 4.0
+    solution = Process(target=solution.run, args=('log', L2_treshold, P_BATT))
     solution.start()
     framework = Process(target=framework.run, args=('log', ))
     framework.start()
