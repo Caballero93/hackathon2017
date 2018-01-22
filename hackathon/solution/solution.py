@@ -64,8 +64,8 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 + L1_old * (1-MILP_L1) * PENAL_L1_INIT + L2_old * (1-MILP_L2) * PENAL_L2_INIT
 
         # add constraints:
-        prob += MILP_P_bat/600 + msg.bessSOC <= 1
-        prob += MILP_P_bat/600 + msg.bessSOC >= 0.2
+        prob += (1/600.0) * MILP_P_bat + msg.bessSOC <= 1.0
+        prob += (1/600.0) * MILP_P_bat + msg.bessSOC >= 0.2
 
         # solve the problem:
         prob.solve()
@@ -87,7 +87,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 L3 = bool(v.varValue)
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    print(str(p_bat) + "\t" + str(L1) + '\t' + str(L2) + '\t' + str(L3) + '\t' + str(panel))
+    print("Results message: ", L1, L2, L3, p_bat, panel)
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
     # Refresh old load states
