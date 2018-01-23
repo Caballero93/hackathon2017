@@ -32,11 +32,11 @@ class Framework(object):
 
 if __name__ == '__main__':
     prepare_dot_dir()
-    L2_treshold = 6.0
+    L2_treshold = 6.5
     results_list = []
     webbrowser.open('http://localhost:{}/viz.html'
                     .format(CFG.results_http_server_port))
-    for i in range(11  ):
+    for i in range(2):
         P_BATT = 1.0
         for j in range(11):
             solution_process = Solution(L2_treshold, P_BATT)
@@ -56,6 +56,24 @@ if __name__ == '__main__':
             P_BATT += 0.5
 
         L2_treshold += 0.1
+
+    # P_BATT = 4.0
+    # for i in range(11):
+    #     solution_process = Solution(L2_treshold, P_BATT)
+    #     solution_process.start()
+    #     framework_process = Framework()
+    #     framework_process.start()
+    #
+    #     solution_process.join()
+    #     framework_process.join()
+    #     solution_process.terminate()
+    #     framework_process.terminate()
+    #
+    #     with open('./data/results.json', 'r') as f:
+    #         data = json.load(f)
+    #     final_res = data[7199]['overall']
+    #     results_list.append((L2_treshold, P_BATT, final_res))
+    #     L2_treshold += 0.1
 
     with open('test_L2_treshold.txt', 'a') as f:
         for el in results_list:
