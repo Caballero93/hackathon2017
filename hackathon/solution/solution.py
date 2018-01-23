@@ -86,10 +86,15 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 elif v.name == 'MILP_L3':
                     L3 = bool(v.varValue)
 
-            if msg.selling_price == 0 and msg.bessSOC <= 0.99:
-                temp = P_pv - (L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3)
+            real_load = L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3
+            temp = P_pv - real_load
+            if msg.selling_price == 0:
                 if temp > 0:
-                    p_bat = - temp
+                    p_bat = - temp if msg.bessSOC != 1 else 0.0
+
+            if (p_bat + P_pv) > real_load and temp <= 0:
+                p_bat = real_load - P_pv
+
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print("Results message: ", L1, L2, L3, p_bat, panel)
