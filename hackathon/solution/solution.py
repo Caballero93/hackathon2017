@@ -65,7 +65,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
             prob = LpProblem("Problem1", LpMinimize)
 
             # add objective function first:
-            prob += price * (MILP_L1*LOAD_1 + MILP_L2*LOAD_2 + MILP_L3*LOAD_3 - P_pv - MILP_P_bat) \
+            prob += price * (MILP_L1*LOAD_1 + MILP_L2*LOAD_2 + MILP_L3*LOAD_3 - P_pv - MILP_P_bat)/60 \
                     + (1-MILP_L1) * PENAL_L1_CONT + (1-MILP_L2) * PENAL_L2_CONT + (1-MILP_L3) * PENAL_L3_CONT \
                     + L1_old * (1-MILP_L1) * PENAL_L1_INIT + L2_old * (1-MILP_L2) * PENAL_L2_INIT
 
