@@ -22,8 +22,10 @@ def worker(msg: DataMessage) -> ResultsMessage:
         if temp<0:
             if temp>-0.3*msg.current_load:
                 L3=False
+            elif temp>-0.5*msg.current_load:
+                L2 = False
             else:
-                L2,L3=False,False
+                L2, L3 = False, False
         if msg.bessSOC < 0.56:
             L3=False
         if msg.bessSOC < 0.2:
