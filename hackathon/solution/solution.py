@@ -31,11 +31,11 @@ def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessag
     else:
         if msg.buying_price==3:
             if msg.bessSOC!=1:
-                p_bat=-4.0
+                p_bat=-P_BATT
             else:
                 p_bat=0.0
         else:
-            p_bat = P_BATT
+            p_bat = 4.0
             if msg.current_load > L2_TRESHOLD:
                 L2 = False
             if msg.solar_production < 0.3*msg.current_load:
