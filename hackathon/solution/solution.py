@@ -31,12 +31,12 @@ def worker(msg: DataMessage) -> ResultsMessage:
     else:
         if msg.buying_price==3:
             if msg.bessSOC!=1:
-                p_bat=-4.0
+                p_bat=-2.0
             else:
                 p_bat=0.0
         else:
-            p_bat = 6.0
-            if msg.current_load > 6.6:
+            p_bat = 4.0
+            if msg.current_load > 6.5:
                 L2 = False
             if msg.solar_production < 0.3*msg.current_load:
                 L3=False
