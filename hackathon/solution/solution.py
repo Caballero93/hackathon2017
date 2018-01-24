@@ -31,7 +31,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
     else:
         if msg.buying_price==3:
             if msg.bessSOC!=1:
-                p_bat=-2.0
+                p_bat=-1.5
             else:
                 p_bat=0.0
         else:
