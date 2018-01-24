@@ -6,7 +6,7 @@ from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
 from hackathon.framework.http_server import prepare_dot_dir
 
 
-def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessage:
+def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
@@ -31,31 +31,42 @@ def worker(msg: DataMessage, L2_treshold: float, P_BATT: float) -> ResultsMessag
     else:
         if msg.buying_price==3:
             if msg.bessSOC!=1:
-                p_bat=-P_BATT
+                p_bat=-4.0
             else:
                 p_bat=0.0
         else:
-            if msg.current_load > L2_treshold:
+            p_bat = P_BATT
+            if msg.current_load > L2_TRESHOLD:
                 L2 = False
             if msg.solar_production < 0.3*msg.current_load:
                 L3=False
-            temp = msg.solar_production - msg.current_load
-            if msg.selling_price==0:
-                if( temp > 0):
-                    p_bat=-temp
-                else:
-                    if temp > -P_BATT:
-                        p_bat=-temp
-                    else:
-                        p_bat=P_BATT*msg.current_load/8
+            LOAD_1 = 0.2 * msg.current_load
+            LOAD_2 = 0.5 * msg.current_load
+            LOAD_3 = 0.3 * msg.current_load
+            real_load = LOAD_1 + int(L2) * LOAD_2 + int(L3) * LOAD_3
+            temp = msg.solar_production - real_load
+            if temp > 0:
+                p_bat = -temp if msg.bessSOC != 1 else 0.0
             else:
-                if(temp > 0):
-                    p_bat=0.0
-                else:
-                    if temp > -P_BATT:
-                        p_bat=-temp
-                    else:
-                        p_bat=P_BATT*msg.current_load/8
+                if p_bat + msg.solar_production > real_load:
+                    p_bat = real_load - msg.solar_production
+
+            # if msg.selling_price==0:
+            #     if( temp > 0):
+            #         p_bat=-temp
+            #     else:
+            #         if temp > -4.0:
+            #             p_bat=-temp
+            #         else:
+            #             p_bat=4.0*msg.current_load/8
+            # else:
+            #     if(temp > 0):
+            #         p_bat=0.0
+            #     else:
+            #         if temp > -4.0:
+            #             p_bat=-temp
+            #         else:
+            #             p_bat=4.0*msg.current_load/8
                 #p_bat=4.0
 
 
