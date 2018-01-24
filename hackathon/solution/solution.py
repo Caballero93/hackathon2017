@@ -5,12 +5,15 @@ from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
     TYPHOON_DIR, config_outs
 from hackathon.framework.http_server import prepare_dot_dir
 
+global flag_solar
+flag_solar = False
 
 def worker(msg: DataMessage) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
 
+    global flag_solar
     L1,L2,L3=True,True,True
     p_bat = 0.0
     panel=PVMode.ON
@@ -26,9 +29,12 @@ def worker(msg: DataMessage) -> ResultsMessage:
         if msg.bessSOC < 0.2:
             L2,L3=False,False
         if msg.solar_production>msg.current_load and msg.bessSOC>0.99:
-            panel=PVMode.OFF
+            flag_solar = True
+        if flag_solar:
+            panel = PVMode.OFF
 
     else:
+        flag_solar = False
         if msg.buying_price==3:
             if msg.bessSOC!=1:
                 p_bat=-1.5
