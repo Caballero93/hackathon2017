@@ -174,3 +174,6 @@ NOVO RESENJE
 (6.5, 5.0, 1891.9533268714297)
 (6.5, 5.5, 1892.7546803260193)
 (6.5, 6.0, 1896.0483279013986)
+
+# Testiranje L2_treshold i nagiba praznjenja baterije za novo resenje:
+
