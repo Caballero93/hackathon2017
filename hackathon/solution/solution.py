@@ -4,7 +4,6 @@ from hackathon.utils.control import Control
 from hackathon.utils.utils import ResultsMessage, DataMessage, PVMode, \
     TYPHOON_DIR, config_outs
 from hackathon.framework.http_server import prepare_dot_dir
-from pulp import *
 from hackathon.energy.rating import PENAL_L1_INIT, PENAL_L2_INIT, PENAL_L1_CONT, PENAL_L2_CONT, PENAL_L3_CONT
 global flag_solar
 flag_solar = False
@@ -50,47 +49,27 @@ def worker(msg: DataMessage) -> ResultsMessage:
         flag_solar = False
         if msg.buying_price == 3:
             if msg.bessSOC != 1:
-                p_bat = -6.0
+                p_bat = -1.5
             else:
                 p_bat = 0.0
         else:
-            # define decision variables
-            MILP_P_bat = LpVariable("MILP_P_bat", -6.0, 6.0, LpContinuous)
-            MILP_L1 = LpVariable("MILP_L1", 0, 1, LpBinary)
-            MILP_L2 = LpVariable("MILP_L2", 0, 1, LpBinary)
-            MILP_L3 = LpVariable("MILP_L3", 0, 1, LpBinary)
+            # Calculate MILP problem coefficients:
+            L1_COEF = price * LOAD_1 / 60 - L1_old * PENAL_L1_INIT - PENAL_L1_CONT
+            L2_COEF = price * LOAD_2 / 60 - L2_old * PENAL_L1_INIT - PENAL_L2_CONT
+            L3_COEF = price * LOAD_3 / 60 - PENAL_L3_CONT
 
-            # define MILP problem
-            prob = LpProblem("Problem1", LpMinimize)
+            # Assign decision variables:
+            if L1_COEF > 0:
+                L1 = False
+            if L2_COEF > 0:
+                L2 = False
+            if L3_COEF > 0:
+                L3 = False
+            p_bat = 6.0
 
-            # add objective function first:
-            prob += price * (MILP_L1 * LOAD_1 + MILP_L2 * LOAD_2 + MILP_L3 * LOAD_3 - P_pv - MILP_P_bat) / 60 \
-                    + (1 - MILP_L1) * PENAL_L1_CONT + (1 - MILP_L2) * PENAL_L2_CONT + (1 - MILP_L3) * PENAL_L3_CONT \
-                    + L1_old * (1 - MILP_L1) * PENAL_L1_INIT + L2_old * (1 - MILP_L2) * PENAL_L2_INIT
-
-            # add constraints:
-            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC <= 1.0
-            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC >= 0.2
-
-            # solve the problem:
-            prob.solve()
-
-
-            # print status:
-            print("========================================================")
-            print("Status: ", LpStatus[prob.status])
-            print("========================================================")
-
-            # assign values to control variables
-            for v in prob.variables():
-                if v.name == 'MILP_P_bat':
-                    p_bat = v.varValue
-                elif v.name == 'MILP_L1':
-                    L1 = bool(v.varValue)
-                elif v.name == 'MILP_L2':
-                    L2 = bool(v.varValue)
-                elif v.name == 'MILP_L3':
-                    L3 = bool(v.varValue)
+            #Protection from discharging the battery below SOC treshold:
+            if msg.bessSOC - p_bat/600 < 0.2:
+                p_bat = 600 * (msg.bessSOC - 0.2)
 
         real_load = L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3
         temp = P_pv - real_load
@@ -98,7 +77,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
             p_bat = - temp if msg.bessSOC != 1 else 0.0
 
         if (p_bat + P_pv) > real_load and temp <= 0:
-             p_bat = real_load - P_pv
+            p_bat = real_load - P_pv
 
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
