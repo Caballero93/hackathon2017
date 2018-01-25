@@ -12,7 +12,7 @@ def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessag
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
-
+    global flag_solar
     L1,L2,L3=True,True,True
     p_bat = 0.0
     panel=PVMode.ON
