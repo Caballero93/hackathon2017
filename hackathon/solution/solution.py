@@ -14,6 +14,8 @@ global L2_old
 L2_old = True
 global L3_old
 L3_old = True
+global flag_solar
+flag_solar = False
 
 def worker(msg: DataMessage) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
@@ -28,6 +30,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
     global L1_old
     global L2_old
     global L3_old
+    global flag_solar
 
     # initialize control variables
     L1, L2, L3 = True, True, True
@@ -47,8 +50,12 @@ def worker(msg: DataMessage) -> ResultsMessage:
         if msg.bessSOC < 0.2:
             L2, L3 = False, False
         if msg.solar_production > msg.current_load and msg.bessSOC > 0.99:
+            flag_solar = True
+            #panel = PVMode.OFF
+        if flag_solar:
             panel = PVMode.OFF
     else:
+        flag_solar = False
         if msg.buying_price == 3:
             if msg.bessSOC != 1:
                 p_bat = -6.0
@@ -65,16 +72,17 @@ def worker(msg: DataMessage) -> ResultsMessage:
             prob = LpProblem("Problem1", LpMinimize)
 
             # add objective function first:
-            prob += price * (MILP_L1*LOAD_1 + MILP_L2*LOAD_2 + MILP_L3*LOAD_3 - P_pv - MILP_P_bat)/60 \
-                    + (1-MILP_L1) * PENAL_L1_CONT + (1-MILP_L2) * PENAL_L2_CONT + (1-MILP_L3) * PENAL_L3_CONT \
-                    + L1_old * (1-MILP_L1) * PENAL_L1_INIT + L2_old * (1-MILP_L2) * PENAL_L2_INIT
+            prob += price * (MILP_L1 * LOAD_1 + MILP_L2 * LOAD_2 + MILP_L3 * LOAD_3 - P_pv - MILP_P_bat) / 60 \
+                    + (1 - MILP_L1) * PENAL_L1_CONT + (1 - MILP_L2) * PENAL_L2_CONT + (1 - MILP_L3) * PENAL_L3_CONT \
+                    + L1_old * (1 - MILP_L1) * PENAL_L1_INIT + L2_old * (1 - MILP_L2) * PENAL_L2_INIT
 
             # add constraints:
-            prob += (-1/600.0) * MILP_P_bat + msg.bessSOC <= 1.0
-            prob += (-1/600.0) * MILP_P_bat + msg.bessSOC >= 0.2
+            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC <= 1.0
+            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC >= 0.2
 
             # solve the problem:
             prob.solve()
+
 
             # print status:
             print("========================================================")
@@ -91,6 +99,15 @@ def worker(msg: DataMessage) -> ResultsMessage:
                     L2 = bool(v.varValue)
                 elif v.name == 'MILP_L3':
                     L3 = bool(v.varValue)
+
+        real_load = L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3
+        temp = P_pv - real_load
+        if temp > 0:
+            p_bat = - temp if msg.bessSOC != 1 else 0.0
+
+        if (p_bat + P_pv) > real_load and temp <= 0:
+             p_bat = real_load - P_pv
+
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print("Results message: ", L1, L2, L3, p_bat, panel)
