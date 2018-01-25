@@ -44,9 +44,10 @@ def rater(socket: zmq.Socket, poller: zmq.Poller, data_msg: DataMessage) \
                   .format('ADEQUATE' if match else 'INADEQUATE',
                           solution_response, spent))
 
-        write_a_result(
+        res = write_a_result(
             *get_physics_metrics(data_msg, solution_response, spent, match),
             data_msg)
+        print(res['overall'])
     elif CFG.DBG:
         print('DBG: results are not sent in predefined interval of {}s.'
               .format(CFG.max_results_wait))

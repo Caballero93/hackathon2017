@@ -279,6 +279,7 @@ def write_a_result(energy_mark: float, performance_mark: float,
         pickle.dump(current, f)
         global LATEST_RESULT
         LATEST_RESULT = new
+        return new
 
 
 def read_results() -> Optional[List[Any]]:
