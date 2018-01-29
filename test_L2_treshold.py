@@ -36,7 +36,7 @@ if __name__ == '__main__':
     results_list = []
     webbrowser.open('http://localhost:{}/viz.html'
                     .format(CFG.results_http_server_port))
-    for i in range(6):
+    for i in range(16):
         P_BATT = 3.0
         for j in range(7):
             solution_process = Solution(L2_treshold, P_BATT)
