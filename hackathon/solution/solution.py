@@ -48,11 +48,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 L2 = False
             # if msg.solar_production < 0.3*msg.current_load:
             #     L3=False
-<<<<<<< HEAD
+            
             if msg.current_load > 3.9:
-=======
-            if msg.current_load > 3.9:
->>>>>>> 4c16c2202c44068dc68b3c5811ed97b737b71337
+
                 L3 = False
             LOAD_1 = 0.2 * msg.current_load
             LOAD_2 = 0.5 * msg.current_load
