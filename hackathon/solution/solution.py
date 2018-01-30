@@ -8,7 +8,7 @@ from hackathon.framework.http_server import prepare_dot_dir
 global flag_solar
 flag_solar = False
 
-def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessage:
+def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float, L3_TRESHOLD: float) -> ResultsMessage:
     """TODO: This function should be implemented by contestants."""
     # Details about DataMessage and ResultsMessage objects can be found in /utils/utils.py
     # Dummy result is returned in every cycle here
@@ -43,8 +43,10 @@ def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessag
             p_bat = P_BATT
             if msg.current_load > L2_TRESHOLD:
                 L2 = False
-            if msg.solar_production < 0.3*msg.current_load:
-                L3=False
+            # if msg.solar_production < 0.3*msg.current_load:
+            #     L3=False
+            if msg.current_load > L3_TRESHOLD:
+                L3 = False
             LOAD_1 = 0.2 * msg.current_load
             LOAD_2 = 0.5 * msg.current_load
             LOAD_3 = 0.3 * msg.current_load
@@ -89,7 +91,7 @@ def worker(msg: DataMessage, L2_TRESHOLD: float, P_BATT: float) -> ResultsMessag
                           pv_mode=panel)
 
 
-def run(log_file: str, L2_treshold: float, P_BATT) -> None:
+def run(log_file: str, L2_treshold: float, P_BATT: float, L3_TRESHOLD: float) -> None:
     prepare_dot_dir()
     config_outs(log_file, 'solution')
 
@@ -98,4 +100,4 @@ def run(log_file: str, L2_treshold: float, P_BATT) -> None:
     #P_BATT = 4.0
 
     for data in cntrl.get_data():
-        cntrl.push_results(worker(data, L2_treshold, P_BATT))
+        cntrl.push_results(worker(data, L2_treshold, P_BATT, L3_TRESHOLD))

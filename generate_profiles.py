@@ -28,6 +28,16 @@ def generate_profiles():
                  [[18.5,19.25]],
                  ]
 
+    # Jos jedan profil za testiranje
+    # LOAD_SCALES = [1.2, 1.1, 1.1, 0.9, 1.1]
+    # SOLAR_SCALES = [0.9, 0.7, 0.8, 1.5, 0.5]
+    # BLACKOUTS = [[[12.75, 13.25]],
+    #              [],
+    #              [[18.5, 19.25]],
+    #              [[2.5, 3.25]],
+    #              [[18.5, 19.25]],
+    #              ]
+
 
     PROFILES = []
 
