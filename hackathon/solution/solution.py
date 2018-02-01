@@ -49,7 +49,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
             # if msg.solar_production < 0.3*msg.current_load:
             #     L3=False
             
-            if msg.current_load > 3.9:
+            if msg.current_load > 3.7:
 
                 L3 = False
             LOAD_1 = 0.2 * msg.current_load
