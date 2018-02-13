@@ -42,7 +42,6 @@ def worker(msg: DataMessage) -> ResultsMessage:
             L2, L3 = False, False
         if msg.solar_production > msg.current_load and msg.bessSOC > 0.99:
             flag_solar = True
-            #panel = PVMode.OFF
         if flag_solar:
             panel = PVMode.OFF
     else:
@@ -67,9 +66,9 @@ def worker(msg: DataMessage) -> ResultsMessage:
                 L3 = False
             p_bat = 6.0
 
-            #Protection from discharging the battery below SOC treshold:
-            if msg.bessSOC - p_bat/600 < 0.2:
-                p_bat = 600 * (msg.bessSOC - 0.2)
+            # Protection from discharging the battery below SOC treshold:
+            if msg.bessSOC - p_bat/600 < 0.192:
+                p_bat = 600 * (msg.bessSOC - 0.192)
 
         real_load = L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3
         temp = P_pv - real_load
