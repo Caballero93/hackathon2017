@@ -78,7 +78,7 @@ def worker(msg: DataMessage) -> ResultsMessage:
 
             # add constraints:
             prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC <= 1.0
-            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC >= 0.2
+            prob += (-1 / 600.0) * MILP_P_bat + msg.bessSOC >= 0.192
 
             # solve the problem:
             prob.solve()
@@ -101,10 +101,12 @@ def worker(msg: DataMessage) -> ResultsMessage:
                     L3 = bool(v.varValue)
 
         real_load = L1 * LOAD_1 + L2 * LOAD_2 + L3 * LOAD_3
+        # if solar production exceeds current load - charge the battery with that excess
         temp = P_pv - real_load
         if temp > 0:
             p_bat = - temp if msg.bessSOC != 1 else 0.0
 
+        # reduce the amount of the battery discharge if it sells the energy to the grid
         if (p_bat + P_pv) > real_load and temp <= 0:
              p_bat = real_load - P_pv
 
